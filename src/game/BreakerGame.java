@@ -55,6 +55,7 @@ public class BreakerGame extends Application {
 
 
     private void step(double elapsedTime) {
+
     }
 
     private Scene setupGame (int width, int height, Paint background) {
