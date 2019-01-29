@@ -29,7 +29,7 @@ public class BreakerGame extends Application {
     private SpriteManager spriteManager;
     private String windowTitle;
 
-    ImageView myBall, myPaddle;
+    ImageView myBall, myPaddle, myBrick;
 
 
     private Scene scene1, scene2;
@@ -37,7 +37,7 @@ public class BreakerGame extends Application {
     private static final int FRAMES_PER_SECOND = 60;
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-    private static final Paint BACKGROUND = Color.BLACK;
+    private static final Paint BACKGROUND = Color.DARKGOLDENROD;
     private int WIDTH = 750;
     private int HEIGHT = 500;
 
@@ -59,6 +59,7 @@ public class BreakerGame extends Application {
 
 
     private void step(double elapsedTime) {
+        myBall.setY(myBall.getY() - 100 * elapsedTime);
 
     }
 
@@ -68,21 +69,29 @@ public class BreakerGame extends Application {
         // create a place to see the shapes
         var scene = new Scene(root, width, height, background);
         // make some shapes and set their properties
+
+        /*Temp until Ball class is implemented */
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
         myBall = new ImageView(image);
-//        // x and y represent the top left corner, so center it
         myBall.setX(width / 2 - myBall.getBoundsInLocal().getWidth() / 2);
-        myBall.setY(height / 2 + 50 - myBall.getBoundsInLocal().getHeight() / 2);
+        myBall.setY(height - 35 - myBall.getBoundsInLocal().getHeight() / 2);
 
         Paddle p = new Paddle();
         myPaddle = p.getMyImageView();
         myPaddle.setX(width / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
-        myPaddle.setY(height - 80  - myPaddle.getBoundsInLocal().getHeight() / 2);
+        myPaddle.setY(height - 15- myPaddle.getBoundsInLocal().getHeight() / 2);
+
+        /* Probably implement as a list of ImageViews? IDK*/
+        Brick b = new Brick();
+        myBrick = b.getMyImageView();
+        myBrick.setX(width / 2 - myBrick.getBoundsInLocal().getWidth() / 2);
+        myBrick.setY(height / 2 - myBrick.getBoundsInLocal().getHeight() / 2);
 
 
 //        // order added to the group is the order in which they are drawn
         root.getChildren().add(myBall);
         root.getChildren().add(myPaddle);
+        root.getChildren().add(myBrick);
 //        // respond to input
         return scene;
     }
