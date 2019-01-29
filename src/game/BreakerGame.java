@@ -29,19 +29,23 @@ public class BreakerGame extends Application {
     private SpriteManager spriteManager;
     private String windowTitle;
 
-    ImageView myBouncer;
+    ImageView myBall, myPaddle;
+
 
     private Scene scene1, scene2;
 
-    public static final int FRAMES_PER_SECOND = 60;
-    public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-    public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+    private static final int FRAMES_PER_SECOND = 60;
+    private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+    private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+    private static final Paint BACKGROUND = Color.BLACK;
+    private int WIDTH = 750;
+    private int HEIGHT = 500;
 
 
     @Override
     public void start (Stage stage) {
         // attach scene to the stage and display it
-        myScene = setupGame(500, 500, Color.WHEAT);
+        myScene = setupGame(WIDTH, HEIGHT, BACKGROUND);
         stage.setScene(myScene);
         stage.setTitle("Breaker by Team 17");
         stage.show();
@@ -65,12 +69,20 @@ public class BreakerGame extends Application {
         var scene = new Scene(root, width, height, background);
         // make some shapes and set their properties
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
-        myBouncer = new ImageView(image);
+        myBall = new ImageView(image);
 //        // x and y represent the top left corner, so center it
-        myBouncer.setX(width / 2 - myBouncer.getBoundsInLocal().getWidth() / 2);
-        myBouncer.setY(height / 2 - myBouncer.getBoundsInLocal().getHeight() / 2);
+        myBall.setX(width / 2 - myBall.getBoundsInLocal().getWidth() / 2);
+        myBall.setY(height / 2 + 50 - myBall.getBoundsInLocal().getHeight() / 2);
+
+        Paddle p = new Paddle();
+        myPaddle = p.getMyImageView();
+        myPaddle.setX(width / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
+        myPaddle.setY(height - 80  - myPaddle.getBoundsInLocal().getHeight() / 2);
+
+
 //        // order added to the group is the order in which they are drawn
-        root.getChildren().add(myBouncer);
+        root.getChildren().add(myBall);
+        root.getChildren().add(myPaddle);
 //        // respond to input
         return scene;
     }
