@@ -5,12 +5,18 @@ import javafx.scene.image.ImageView;
 
 public class Paddle extends Sprite{
     private static final String FILE = "paddle.gif";
-    private static int WIDTH = 175;
+    private static final int WIDTH = 175;
+    private static final int SPEED = 50;
 
     public Paddle(){
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(FILE));
         myImageView = new ImageView(image);
         myImageView.setFitWidth(WIDTH);
     }
+
+    public static int getSpeed() {
+        return SPEED;
+    }
+
 
 }
