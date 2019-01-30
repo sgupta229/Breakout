@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -24,28 +25,26 @@ import javafx.scene.text.*;
 import javafx.geometry.Pos;
 
 public class BreakerGame extends Application {
-    private int framesPerSecond;
+    private static final int FRAMES_PER_SECOND = 60;
+    private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+    private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+    private static final Paint BACKGROUND = Color.GHOSTWHITE;
+    private int WIDTH = 750;
+    private int HEIGHT = 500;
     private Timeline gameLoop;
     private Scene myScene;
     private Group sceneNodes;
     private SpriteManager spriteManager;
     private String windowTitle;
 
+    //dunno if we wanna store them like this
     ImageView myBall, myPaddle, myBrick;
+    Paddle p = new Paddle();
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
 
-    private static final int FRAMES_PER_SECOND = 60;
-    private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-    private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-    private static final Paint BACKGROUND = Color.DARKGOLDENROD;
-    private int WIDTH = 750;
-    private int HEIGHT = 500;
 
-    public static void main (String[] args) {
-        launch(args);
-    }
 
     @Override
     public void start (Stage stage) {
@@ -60,7 +59,17 @@ public class BreakerGame extends Application {
     }
 
     private void step(double elapsedTime) {
+        updateSprites(elapsedTime);
+        checkAndHandleCollisions();
+    }
+
+
+    private void updateSprites(double elapsedTime) {
         myBall.setY(myBall.getY() - 100 * elapsedTime);
+    }
+
+    private void checkAndHandleCollisions() {
+
     }
 
     private Scene setupSplashScreen (int width, int height, Paint background) {
@@ -76,6 +85,7 @@ public class BreakerGame extends Application {
         vb.getChildren().addAll(label1, startButton);
         return splashScene;
     }
+
 
     private Scene setupGame (int width, int height, Paint background) {
 
@@ -97,12 +107,11 @@ public class BreakerGame extends Application {
         myBall.setX(width / 2 - myBall.getBoundsInLocal().getWidth() / 2);
         myBall.setY(height - 35 - myBall.getBoundsInLocal().getHeight() / 2);
 
-        Paddle p = new Paddle();
         myPaddle = p.getMyImageView();
         myPaddle.setX(width / 2 - myPaddle.getBoundsInLocal().getWidth() / 2);
         myPaddle.setY(height - 15- myPaddle.getBoundsInLocal().getHeight() / 2);
 
-        /* Probably implement as a list of ImageViews? IDK*/
+        /* Probably implement as a list of ImageViews? Separate method that returns a list of Bricks from data? IDK*/
         Brick b = new Brick();
         myBrick = b.getMyImageView();
         myBrick.setX(width / 2 - myBrick.getBoundsInLocal().getWidth() / 2);
@@ -112,7 +121,23 @@ public class BreakerGame extends Application {
         root.getChildren().add(myBall);
         root.getChildren().add(myPaddle);
         root.getChildren().add(myBrick);
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         // respond to input
         return stageOne;
+    }
+
+
+    private void handleKeyInput (KeyCode code) {
+        if (code == KeyCode.RIGHT) {
+            myPaddle.setX(myPaddle.getX() + p.getSpeed());
+        }
+        else if (code == KeyCode.LEFT) {
+            myPaddle.setX(myPaddle.getX() - p.getSpeed());
+        }
+    }
+
+
+    public static void main (String[] args) {
+        launch(args);
     }
 }
