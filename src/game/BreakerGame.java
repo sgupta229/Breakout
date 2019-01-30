@@ -72,6 +72,10 @@ public class BreakerGame extends Application {
 
     }
 
+    private void isCollided(Sprite a, Sprite b){
+
+    }
+
 
     private Scene setupGame (int width, int height, Paint background) {
         // create one top level collection to organize the things in the scene

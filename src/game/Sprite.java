@@ -9,4 +9,8 @@ public class Sprite {
     public ImageView getMyImageView() {
         return myImageView;
     }
+
+    public void handleCollision(){
+
+    }
 }
