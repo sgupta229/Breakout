@@ -2,8 +2,9 @@ package game;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 
-public class Paddle extends Sprite{
+public class Paddle extends Sprite {
     private static final String FILE = "paddle.gif";
     private static int WIDTH = 175;
 
