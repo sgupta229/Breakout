@@ -4,10 +4,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Brick extends Sprite{
-    private static final String FILE = "brick1.gif";
 
-    public Brick() {
-        var image = new Image(this.getClass().getClassLoader().getResourceAsStream(FILE));
-        myImageView = new ImageView(image);
+    public Brick(String filename) {
+        super(filename);
+
+        //In reality we should use the dimensions of the scene to determine the width
+        myImageView.setFitWidth(myImageView.getBoundsInLocal().getWidth()*1.5);
+        myImageView.setFitHeight(myImageView.getBoundsInLocal().getHeight()*2);
+    }
+
+    @Override
+    public void handleCollision() {
+        setX(getX() + 10000);
     }
 }
