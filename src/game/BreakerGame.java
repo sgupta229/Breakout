@@ -130,7 +130,7 @@ public class BreakerGame extends Application {
         var list = new ArrayList<Brick>();
 
         int count = 0;
-        int brickType = 4;
+        int brickType = 5;
         int currentY = 50;
         int currentX = 0;
         while (true){
@@ -144,6 +144,8 @@ public class BreakerGame extends Application {
                 }
                 currentX = 0;
                 currentY += b.getHeight();
+                if (brickType == 1) brickType = 5;
+                else brickType -= 1;
             }
             else{
                 currentX += b.getMyImageView().getBoundsInLocal().getWidth();
