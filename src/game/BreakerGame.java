@@ -138,7 +138,7 @@ public class BreakerGame extends Application {
             b.setInitialPosition(currentX, currentY);
             root.getChildren().add(b.getMyImageView());
             list.add(b);
-            if (currentX + b.getMyImageView().getBoundsInLocal().getWidth() > width){git
+            if (currentX + b.getMyImageView().getBoundsInLocal().getWidth() > width){
                 if (currentY + b.getHeight() >= height - 200){
                     break;
                 }
