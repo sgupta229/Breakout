@@ -21,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.text.*;
+import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 
@@ -43,24 +45,22 @@ public class BreakerGame extends Application {
     ArrayList<Brick> myBricks;
     Paddle myPaddle;
 
+    private Scene splashScene, stageOne, stageTwo, stageThree;
+    private Stage primaryStage;
 
 
 
     @Override
     public void start (Stage stage) {
-        // attach scene to the stage and display it
-        myScene = setupGame(WIDTH, HEIGHT, BACKGROUND);
-        stage.setScene(myScene);
-        stage.setTitle("Breaker by Team 17");
-        stage.show();
-        // attach "game loop" to timeline to play it
-        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        var animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
-    }
+        primaryStage = stage;
+        myScene = setupSplashScreen(WIDTH, HEIGHT, BACKGROUND);
+        primaryStage.setScene(myScene);
+        primaryStage.setTitle("Breakout Game by Team 17");
+        primaryStage.show();
 
+        // attach "game loop" to timeline to play it
+
+    }
 
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
@@ -96,12 +96,33 @@ public class BreakerGame extends Application {
 //        return a.myImageView.getBoundsInLocal().intersects(b.myImageView.getBoundsInLocal());
 //    }
 
+    private Scene setupSplashScreen (int width, int height, Paint background) {
+        VBox vb = new VBox(20);
+        vb.setAlignment(Pos.CENTER);
+        splashScene = new Scene(vb, width, height, background);
+
+        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
+        label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        Button startButton = new Button("Start Game");
+        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
+
+        vb.getChildren().addAll(label1, startButton);
+        return splashScene;
+    }
+
 
     private Scene setupGame (int width, int height, Paint background) {
+
+        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+        var animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
+
         // create one top level collection to organize the things in the scene
         var root = new Group();
         // create a place to see the shapes
-        var scene = new Scene(root, width, height, background);
+        stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
 
         /*Temp until Ball class is implemented */
@@ -120,10 +141,9 @@ public class BreakerGame extends Application {
 
         myBricks = generateBricks(root, width, height);
 
-//        // respond to input
-        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
-        return scene;
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        // respond to input
+        return stageOne;
     }
 
     private ArrayList<Brick> generateBricks(Group root, double width, double height) {
