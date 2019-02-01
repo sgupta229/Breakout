@@ -58,17 +58,16 @@ public class BreakerGame extends Application {
         primaryStage.show();
 
         // attach "game loop" to timeline to play it
-
     }
 
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
         checkAndHandleCollisions();
-
     }
 
 
     private void updateSprites(double elapsedTime) {
+        //myBall.setY(myBall.getY() - 100 * elapsedTime);
         myBall.incrementPos(elapsedTime);
     }
 

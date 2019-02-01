@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class Ball extends Sprite {
-    public static final String BALL_IMAGE = "ball.gif";
     private double x_dir;
     private double y_dir;
     private int ball_speed;
@@ -20,8 +19,9 @@ public class Ball extends Sprite {
         super(filename);
         myImageView.setFitWidth(15);
         myImageView.setFitWidth(15);
-        x_dir = 1;
-        y_dir = 1;
+        x_dir = 100;
+        y_dir = 100;
+        ball_speed = 1;
     }
 
     public void changeSpeed(int speed) {
@@ -36,26 +36,25 @@ public class Ball extends Sprite {
         return this.y_dir;
     }
 
-    //Switches X direction
-    public void changeX_dir() {
-        this.x_dir *= -1;
-    }
-
-    //Switches Y direction
-    public void changeY_dir() {
-        this.y_dir *= -1;
-    }
-
-    private void updateX_bounds() {
-        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getX() <= 0) {
-            changeX_dir();
+    public void updateX_bounds() {
+        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getY() <= 0) {
+            this.x_dir *= -1;
         }
     }
 
-    private void updateY_bounds() {
-        if(this.myImageView.getBoundsInParent().getMaxY() >= HEIGHT || this.myImageView.getY() <= 0) {
-            changeY_dir();
+    public void updateY_bounds() {
+        if(this.myImageView.getY() <= 0) {
+            this.y_dir *= -1;
         }
+        if(this.myImageView.getY() >= HEIGHT) {
+            resetBall();
+        }
+    }
+
+    public void resetBall() {
+        this.myImageView.setX(WIDTH / 2 - this.myImageView.getBoundsInLocal().getWidth() / 2);
+        this.myImageView.setY(HEIGHT - 35 - this.myImageView.getBoundsInLocal().getHeight() / 2);
+        ball_speed = 0;
     }
 
     public void incrementPos(double elapsedTime) {
@@ -73,14 +72,34 @@ public class Ball extends Sprite {
     private void paddleCollision(Paddle myPaddle) {
         double ball_location = this.myImageView.getX() + this.myImageView.getBoundsInLocal().getWidth() / 2;
         double paddle_location = myPaddle.myImageView.getBoundsInLocal().getWidth() / 8;
-
-        if (this.myImageView.getBoundsInParent().intersects(myPaddle.myImageView.getBoundsInParent())) {
-            if (ball_location <= myPaddle.getX() + paddle_location) {
-                x_dir = -1.10;
-                y_dir = 1;
-            }
-
-        }
+//        if (this.myImageView.getBoundsInParent().intersects(myPaddle.myImageView.getBoundsInParent())) {
+//            if (ball_location <= myPaddle.getX() + paddle_location) {
+//                x_dir = -1.10;
+//                y_dir = 1;
+//            } else if (ball_location >= myPaddle.getX() + 7 * paddle_location) {
+//                x_dir = 1.10;
+//                y_dir = 1;
+//            } else if (ball_location <= myPaddle.getX() + 2 * paddle_location) {
+//                x_dir = -0.8;
+//                y_dir = 1;
+//            } else if (ball_location >= myPaddle.getX() + 6 * paddle_location) {
+//                x_dir = 0.8;
+//                y_dir = 1;
+//            } else if (ball_location <= myPaddle.getX() + 3 * paddle_location) {
+//                x_dir = -0.5;
+//                y_dir = 1;
+//            } else if (ball_location >= myPaddle.getX() + 5 * paddle_location) {
+//                x_dir = 0.5;
+//                y_dir = 1;
+//            } else if (ball_location <= myPaddle.getX() + 4 * paddle_location) {
+//                x_dir = -0.2;
+//                y_dir = 1;
+//            } else if (ball_location >= myPaddle.getX() + 4 * paddle_location) {
+//                x_dir = 0.2;
+//                y_dir = 1;
+//            }
+//
+//        }
     }
 
     private void brickCollision(ArrayList<Brick> myBricks) {
