@@ -73,7 +73,7 @@ public class BreakerGame extends Application {
     }
 
     private void checkAndHandleCollisions() {
-        for (Sprite s: myBricks) {
+        for (Brick s: myBricks) {
             if (isCollided(myBall, s)) {
                 s.handleCollision();
 //                NEED TO IMPLEMENT BALL CLASS FIRST

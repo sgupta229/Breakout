@@ -5,9 +5,8 @@ import javafx.scene.image.ImageView;
 
 public abstract class Sprite {
 
-    public Sprite() {
+    protected ImageView myImageView;
 
-    }
 
     public Sprite(String filename){
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(filename));
@@ -26,8 +25,6 @@ public abstract class Sprite {
     public void setY(double y){
         myImageView.setY(y);
     }
-
-    protected ImageView myImageView;
 
     public ImageView getMyImageView() {
         return myImageView;

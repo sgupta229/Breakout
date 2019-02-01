@@ -7,22 +7,22 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-
 public class Ball extends Sprite {
     public static final String BALL_IMAGE = "ball.gif";
     private double x_dir;
     private double y_dir;
     private int ball_speed;
-    private Ball myBall;
     private ImageView ballImage;
     public static final int WIDTH = 750;
     public static final int HEIGHT = 500;
 
-    public Ball(int speed, ImageView image) {
+
+    public Ball(String filename){
+        super(filename);
+        myImageView.setFitWidth(15);
+        myImageView.setFitWidth(15);
         x_dir = 1;
         y_dir = 1;
-        ball_speed = speed;
-        ballImage = image;
     }
 
     public void changeSpeed(int speed) {
@@ -76,12 +76,17 @@ public class Ball extends Sprite {
         incrementPos(elapsedTime);
     }
 
-    private void paddleCollision(Paddle paddle) {
+    private void paddleCollision(Paddle myPaddle) {
+        double ball_location = this.ballImage.getX() + this.ballImage.getBoundsInLocal().getWidth() / 2;
+        double paddle_location = myPaddle.myImageView.getBoundsInLocal().getWidth() / 8;
+
+        if (this.ballImage.getBoundsInParent().intersects(myPaddle.myImageView.getBoundsInParent())) {
+
+        }
 
     }
 
     private void brickCollision(ArrayList<Brick> myBricks) {
-
 
     }
 
