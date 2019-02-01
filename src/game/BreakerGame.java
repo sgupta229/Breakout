@@ -41,8 +41,8 @@ public class BreakerGame extends Application {
     private String windowTitle;
 
     //dunno if we wanna store them like this
-    ImageView myBall;
-    //Ball myBall;
+    //ImageView myBall;
+    Ball myBall;
     ArrayList<Brick> myBricks;
     Paddle myPaddle;
 
@@ -64,12 +64,12 @@ public class BreakerGame extends Application {
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
         checkAndHandleCollisions();
+
     }
 
 
     private void updateSprites(double elapsedTime) {
-        myBall.setY(myBall.getY() - 100 * elapsedTime);
-        //myBall.updateFinalPos(elapsedTime, myPaddle, gameLoop, primaryStage, myBricks);
+        myBall.incrementPos(elapsedTime);
     }
 
     private void checkAndHandleCollisions() {
@@ -84,11 +84,12 @@ public class BreakerGame extends Application {
 //            NEED TO IMPLEMENT BALL CLASS FIRST
 //            myBall.handleCollision();
         }
+        myBall.handleCollision(myPaddle, myBricks);
     }
 
     //TEMPORARY UNTIL BALL IS IMPLEMENTED
-    private boolean isCollided(ImageView a, Sprite b){
-        return a.getBoundsInLocal().intersects(b.myImageView.getBoundsInLocal());
+    private boolean isCollided(Sprite a, Sprite b){
+        return a.myImageView.getBoundsInLocal().intersects(b.myImageView.getBoundsInLocal());
     }
 
     //THE REAL isCollided()
@@ -126,17 +127,17 @@ public class BreakerGame extends Application {
         // make some shapes and set their properties
 
         /*Temp until Ball class is implemented */
-        var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
-        myBall = new ImageView(image);
-        myBall.setX(width / 2 - myBall.getBoundsInLocal().getWidth() / 2);
-        myBall.setY(height - 35 - myBall.getBoundsInLocal().getHeight() / 2);
+        //var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
+        myBall = new Ball("ball.gif");
+        myBall.setX(width / 2 - myBall.myImageView.getBoundsInLocal().getWidth() / 2);
+        myBall.setY(height - 35 - myBall.myImageView.getBoundsInLocal().getHeight() / 2);
 
         myPaddle = new Paddle("paddle.gif");
         double x = width / 2 - myPaddle.getWidth() / 2;
         double y = height - 25 - myPaddle.getHeight() / 2;
         myPaddle.setInitialPosition(x, y);
 
-        root.getChildren().add(myBall);
+        root.getChildren().add(myBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
         myBricks = generateBricks(root, width, height);
