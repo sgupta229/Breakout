@@ -80,10 +80,8 @@ public class BreakerGame extends Application {
             }
         }
         if (isCollided(myBall, myPaddle)){
-//            NEED TO IMPLEMENT BALL CLASS FIRST
-//            myBall.handleCollision();
+            myBall.handleCollision(myPaddle, myBricks);
         }
-        myBall.handleCollision(myPaddle, myBricks);
     }
 
     //TEMPORARY UNTIL BALL IS IMPLEMENTED

@@ -37,7 +37,7 @@ public class Ball extends Sprite {
     }
 
     public void updateX_bounds() {
-        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getY() <= 0) {
+        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getX() <= 0) {
             this.x_dir *= -1;
         }
     }
@@ -60,46 +60,59 @@ public class Ball extends Sprite {
     public void incrementPos(double elapsedTime) {
         this.myImageView.setX(this.myImageView.getX() + x_dir * this.ball_speed * elapsedTime);
         this.myImageView.setY(this.myImageView.getY() - y_dir * this.ball_speed * elapsedTime);
+        updateX_bounds();
+        updateY_bounds();
     }
 
     public void handleCollision(Paddle myPaddle,  ArrayList<Brick> myBricks) {
-        updateX_bounds();
-        updateY_bounds();
         paddleCollision(myPaddle);
         brickCollision(myBricks);
     }
 
     private void paddleCollision(Paddle myPaddle) {
-        double ball_location = this.myImageView.getX() + this.myImageView.getBoundsInLocal().getWidth() / 2;
-        double paddle_location = myPaddle.myImageView.getBoundsInLocal().getWidth() / 8;
-//        if (this.myImageView.getBoundsInParent().intersects(myPaddle.myImageView.getBoundsInParent())) {
-//            if (ball_location <= myPaddle.getX() + paddle_location) {
-//                x_dir = -1.10;
-//                y_dir = 1;
-//            } else if (ball_location >= myPaddle.getX() + 7 * paddle_location) {
-//                x_dir = 1.10;
-//                y_dir = 1;
-//            } else if (ball_location <= myPaddle.getX() + 2 * paddle_location) {
-//                x_dir = -0.8;
-//                y_dir = 1;
-//            } else if (ball_location >= myPaddle.getX() + 6 * paddle_location) {
-//                x_dir = 0.8;
-//                y_dir = 1;
-//            } else if (ball_location <= myPaddle.getX() + 3 * paddle_location) {
-//                x_dir = -0.5;
-//                y_dir = 1;
-//            } else if (ball_location >= myPaddle.getX() + 5 * paddle_location) {
-//                x_dir = 0.5;
-//                y_dir = 1;
-//            } else if (ball_location <= myPaddle.getX() + 4 * paddle_location) {
-//                x_dir = -0.2;
-//                y_dir = 1;
-//            } else if (ball_location >= myPaddle.getX() + 4 * paddle_location) {
-//                x_dir = 0.2;
-//                y_dir = 1;
-//            }
-//
-//        }
+        double ball_location = this.myImageView.getX()+ this.myImageView.getBoundsInLocal().getWidth() / 2;
+        double paddle_increment = myPaddle.myImageView.getBoundsInLocal().getWidth() / 10;
+        if (ball_location <= myPaddle.myImageView.getX() + paddle_increment) {
+            x_dir = -115;
+            y_dir = 100;
+        }
+        else if (ball_location <= myPaddle.myImageView.getX() + 2 * paddle_increment) {
+            x_dir = -110;
+            y_dir = 100;
+        }
+        else if (ball_location <= myPaddle.myImageView.getX() + 3 * paddle_increment) {
+            x_dir = -105;
+            y_dir = 100;
+        }
+        else if (ball_location <= myPaddle.myImageView.getX() + 4 * paddle_increment) {
+            x_dir = -102.5;
+            y_dir = 100;
+        }
+        else if (ball_location <= myPaddle.myImageView.getX() + 5 * paddle_increment) {
+            x_dir = 100;
+            y_dir = 100;
+        }
+        else if (ball_location >= myPaddle.myImageView.getX() + 5 * paddle_increment) {
+            x_dir = 100;
+            y_dir = 100;
+        }
+        else if (ball_location >= myPaddle.myImageView.getX() + 6 * paddle_increment) {
+            x_dir = 102.5;
+            y_dir = 100;
+        }
+        else if (ball_location >= myPaddle.myImageView.getX() + 7 * paddle_increment) {
+            x_dir = 105;
+            y_dir = 100;
+        }
+        else if (ball_location >= myPaddle.myImageView.getX() + 8 * paddle_increment) {
+            x_dir = 110;
+            y_dir = 100;
+        }
+        else if (ball_location >= myPaddle.myImageView.getX() + 9 * paddle_increment) {
+            x_dir = 115;
+            y_dir = 100;
+        }
+
     }
 
     private void brickCollision(ArrayList<Brick> myBricks) {
