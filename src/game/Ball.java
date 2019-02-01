@@ -62,6 +62,7 @@ public class Ball extends Sprite {
             x_dir = -100;
         }
         else if (ball_location >= myPaddle.getX() + 11 * paddle_increment) {
+
             x_dir = 100;
         }
         else if (ball_location <= myPaddle.getX() + 2 * paddle_increment) {
