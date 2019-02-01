@@ -230,6 +230,13 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(1.5);
             }
         }
+
+        else if (code == KeyCode.L){
+            livesLeft += 1;
+        }
+        else if (code == KeyCode.R){
+            myBall.reset(myPaddle);
+        }
     }
 
     public static void main (String[] args) {
