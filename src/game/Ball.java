@@ -57,40 +57,37 @@ public class Ball extends Sprite {
     //ALTER SPEED TO ACCOUNT FOR DIFFERENCE
     public void paddleCollision(Paddle myPaddle) {
         double ball_location = this.getX() + this.getWidth() / 2;
-        double paddle_increment = myPaddle.getWidth() / 11;
+        double paddle_increment = myPaddle.getWidth() / 10;
         if (ball_location <= myPaddle.getX() + 1 * paddle_increment) {
             x_dir = -100;
         }
-        else if (ball_location >= myPaddle.getX() + 11 * paddle_increment) {
+        else if (ball_location >= myPaddle.getX() + 10 * paddle_increment) {
 
             x_dir = 100;
         }
         else if (ball_location <= myPaddle.getX() + 2 * paddle_increment) {
             x_dir = -80;
         }
-        else if (ball_location >= myPaddle.getX() + 10 * paddle_increment) {
+        else if (ball_location >= myPaddle.getX() + 9 * paddle_increment) {
             x_dir = 80;
         }
         else if (ball_location <= myPaddle.getX() + 3 * paddle_increment) {
             x_dir = -60;
         }
-        else if (ball_location >= myPaddle.getX() + 9 * paddle_increment) {
+        else if (ball_location >= myPaddle.getX() + 8 * paddle_increment) {
             x_dir = 60;
         }
         else if (ball_location <= myPaddle.getX() + 4 * paddle_increment) {
             x_dir = -40;
         }
-        else if (ball_location >= myPaddle.getX() + 8 * paddle_increment) {
+        else if (ball_location >= myPaddle.getX() + 7 * paddle_increment) {
             x_dir = 40;
         }
         else if (ball_location <= myPaddle.getX() + 5 * paddle_increment) {
             x_dir = -20;
         }
-        else if (ball_location >= myPaddle.getX() + 7 * paddle_increment) {
+        else if (ball_location >= myPaddle.getX() + 6 * paddle_increment) {
             x_dir = 20;
-        }
-        else if (ball_location == myPaddle.getX() + 6 * paddle_increment) {
-            x_dir = 0;
         }
         y_dir = 100;
     }

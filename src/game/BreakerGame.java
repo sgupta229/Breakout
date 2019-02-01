@@ -100,14 +100,15 @@ public class BreakerGame extends Application {
 
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
+        animation.stop();
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
         var scene = new Scene(vb, width, height, background);
 
         String str;
-        if (livesLeft<0) str = "lost";
+        if (livesLeft <= 0) str = "lost";
         else str = "win";
-            Label label1 = new Label("You " + str + "! Press the button to play again!");
+        Label label1 = new Label("You " + str + "! Press the button to play again!");
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Play Again");
         startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
@@ -140,11 +141,15 @@ public class BreakerGame extends Application {
         animation.getKeyFrames().add(frame);
         animation.play();
 
+        livesLeft = 3;
+        Label livesLabel = new Label(Integer.toString(livesLeft));
+
         // create one top level collection to organize the things in the scene
         var root = new Group();
         // create a place to see the shapes
         stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
+        root.getChildren().add(livesLabel);
 
         //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif");
@@ -162,7 +167,6 @@ public class BreakerGame extends Application {
         root.getChildren().add(myPaddle.getMyImageView());
 
         myBricks = generateBricks(root, width, height);
-        livesLeft = 3;
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -199,8 +203,6 @@ public class BreakerGame extends Application {
         }
         return list;
     }
-
-
 
 
     private void handleKeyInput (KeyCode code) {
