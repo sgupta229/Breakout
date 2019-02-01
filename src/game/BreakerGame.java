@@ -98,7 +98,8 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
+        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' to start/pause \nthe game" +
+                ", 'F' to speed the ball up, and 'S' to slow the ball down.");
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Start Game");
         startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
@@ -126,7 +127,7 @@ public class BreakerGame extends Application {
         //var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
         myBall = new Ball("ball.gif");
         myBall.setX(width / 2 - myBall.myImageView.getBoundsInLocal().getWidth() / 2);
-        myBall.setY(height - 35 - myBall.myImageView.getBoundsInLocal().getHeight() / 2);
+        myBall.setY(height - 50 - myBall.myImageView.getBoundsInLocal().getHeight() / 2);
 
         myPaddle = new Paddle("paddle.gif");
         double x = width / 2 - myPaddle.getWidth() / 2;

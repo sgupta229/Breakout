@@ -62,35 +62,32 @@ public class Ball extends Sprite {
         if (ball_location <= myPaddle.myImageView.getX() + 1 * paddle_increment) {
             x_dir = -100;
         }
-        else if (ball_location >= myPaddle.myImageView.getX() + 11 * paddle_increment) {
+        else if (ball_location >= myPaddle.myImageView.getX() + 10 * paddle_increment) {
             x_dir = 100;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 2 * paddle_increment) {
             x_dir = -80;
         }
-        else if (ball_location >= myPaddle.myImageView.getX() + 10 * paddle_increment) {
+        else if (ball_location >= myPaddle.myImageView.getX() + 9 * paddle_increment) {
             x_dir = 80;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 3 * paddle_increment) {
             x_dir = -60;
         }
-        else if (ball_location >= myPaddle.myImageView.getX() + 9 * paddle_increment) {
+        else if (ball_location >= myPaddle.myImageView.getX() + 8 * paddle_increment) {
             x_dir = 60;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 4 * paddle_increment) {
             x_dir = -40;
         }
-        else if (ball_location >= myPaddle.myImageView.getX() + 8 * paddle_increment) {
+        else if (ball_location >= myPaddle.myImageView.getX() + 7 * paddle_increment) {
             x_dir = 40;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 5 * paddle_increment) {
             x_dir = -20;
         }
-        else if (ball_location >= myPaddle.myImageView.getX() + 7 * paddle_increment) {
+        else if (ball_location >= myPaddle.myImageView.getX() + 5 * paddle_increment) {
             x_dir = 20;
-        }
-        else if (ball_location == myPaddle.myImageView.getX() + 6 * paddle_increment) {
-            x_dir = 0;
         }
         y_dir = 100;
     }
