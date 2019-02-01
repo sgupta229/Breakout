@@ -32,8 +32,8 @@ public class BreakerGame extends Application {
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
     private static final int NUM_BRICKS = 20;
-    private int WIDTH = 750;
-    private int HEIGHT = 500;
+    public static final int WIDTH = 750;
+    public static final int HEIGHT = 500;
     private Timeline gameLoop;
     private Scene myScene;
     private Group sceneNodes;
@@ -47,8 +47,6 @@ public class BreakerGame extends Application {
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
-
-
 
     @Override
     public void start (Stage stage) {
