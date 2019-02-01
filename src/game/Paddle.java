@@ -1,9 +1,5 @@
 package game;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-
 public class Paddle extends Sprite{
     private static final int PADDLE_WIDTH = 175;
     private static final int PADDLE_SPEED = 50;

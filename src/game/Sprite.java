@@ -13,36 +13,36 @@ public abstract class Sprite {
         myImageView = new ImageView(image);
     }
 
-    public void setInitialPosition(double x, double y){
+    public void setPosition(double x, double y){
         setX(x);
         setY(y);
     };
 
     public void setX(double x){
-        myImageView.setX(x);
+        this.myImageView.setX(x);
     }
 
     public void setY(double y){
-        myImageView.setY(y);
+        this.myImageView.setY(y);
     }
 
     public ImageView getMyImageView() {
-        return myImageView;
+        return this.myImageView;
     }
 
     public double getX(){
-        return myImageView.getX();
+        return this.myImageView.getX();
     }
 
     public double getY(){
-        return myImageView.getY();
+        return this.myImageView.getY();
     }
 
     public double getWidth(){
-        return myImageView.getBoundsInLocal().getWidth();
+        return this.myImageView.getBoundsInLocal().getWidth();
     }
 
     public double getHeight(){
-        return myImageView.getBoundsInLocal().getHeight();
+        return this.myImageView.getBoundsInLocal().getHeight();
     }
 }

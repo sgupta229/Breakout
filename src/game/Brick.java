@@ -1,15 +1,12 @@
 package game;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 public class Brick extends Sprite{
 
-    public Brick(String filename) {
+    public Brick(String filename, double width, double sceneHeight) {
         super(filename);
 
         //In reality we should use the dimensions of the scene to determine the width
-        myImageView.setFitWidth(myImageView.getBoundsInLocal().getWidth()*1.5);
+        myImageView.setFitWidth(width / 7);
         myImageView.setFitHeight(myImageView.getBoundsInLocal().getHeight()*2);
     }
 

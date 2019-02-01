@@ -25,29 +25,26 @@ import javafx.scene.text.*;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BreakerGame extends Application {
     private static final int FRAMES_PER_SECOND = 60;
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
-    private static final int NUM_BRICKS = 20;
     public static final int WIDTH = 750;
     public static final int HEIGHT = 500;
-    private Timeline gameLoop;
+    private Timeline animation;
     private Scene myScene;
-    private Group sceneNodes;
-    private SpriteManager spriteManager;
-    private String windowTitle;
 
-    //dunno if we wanna store them like this
-    //ImageView myBall;
-    Ball myBall;
-    ArrayList<Brick> myBricks;
-    Paddle myPaddle;
+    private Ball myBall;
+    private ArrayList<Brick> myBricks;
+    private Paddle myPaddle;
+    private int livesLeft;
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
+    private boolean lostALife = false;
 
     @Override
     public void start (Stage stage) {
@@ -56,42 +53,68 @@ public class BreakerGame extends Application {
         primaryStage.setScene(myScene);
         primaryStage.setTitle("Breakout Game by Team 17");
         primaryStage.show();
-
-        // attach "game loop" to timeline to play it
     }
 
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
+
+        //check for loss
+        if (lostALife){
+            livesLeft -= 1;
+            if (livesLeft<0){
+                primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+            }
+        }
+
+        //check for win
+        if (myBricks.isEmpty()){
+            primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+        }
+
         checkAndHandleCollisions();
     }
 
 
     private void updateSprites(double elapsedTime) {
-        //myBall.setY(myBall.getY() - 100 * elapsedTime);
-        myBall.incrementPos(elapsedTime, myPaddle);
+        lostALife = myBall.incrementPos(elapsedTime, myPaddle);
     }
 
     private void checkAndHandleCollisions() {
-        for (Brick s: myBricks) {
-            if (isCollided(myBall, s)) {
-                myBall.brickCollision(s);
-                s.handleCollision();
+        var toRemove = new ArrayList();
+        for (Brick b: myBricks) {
+            if (isCollided(myBall, b)) {
+                myBall.brickCollision(b);
+                b.handleCollision();
+                toRemove.add(b);
             }
         }
+        myBricks.removeAll(toRemove);
         if (isCollided(myBall, myPaddle)){
             myBall.paddleCollision(myPaddle);
         }
     }
 
-    //TEMPORARY UNTIL BALL IS IMPLEMENTED
     private boolean isCollided(Sprite a, Sprite b){
-        return a.myImageView.getBoundsInParent().intersects(b.myImageView.getBoundsInParent());
+        return a.getMyImageView().getBoundsInParent().intersects(b.getMyImageView().getBoundsInParent());
     }
 
-    //THE REAL isCollided()
-//    private boolean isCollided(Sprite a, Sprite b){
-//        return a.myImageView.getBoundsInLocal().intersects(b.myImageView.getBoundsInLocal());
-//    }
+    //We should try to combine this and Splash screen somehow
+    private Scene setupResetScreen(int width, int height, Paint background) {
+        VBox vb = new VBox(20);
+        vb.setAlignment(Pos.CENTER);
+        var scene = new Scene(vb, width, height, background);
+
+        String str;
+        if (livesLeft<0) str = "lost";
+        else str = "win";
+            Label label1 = new Label("You " + str + "! Press the button to play again!");
+        label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        Button startButton = new Button("Play Again");
+        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
+
+        vb.getChildren().addAll(label1, startButton);
+        return scene;
+    }
 
     private Scene setupSplashScreen (int width, int height, Paint background) {
         VBox vb = new VBox(20);
@@ -111,7 +134,7 @@ public class BreakerGame extends Application {
     private Scene setupGame (int width, int height, Paint background) {
 
         var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        var animation = new Timeline();
+        animation = new Timeline();
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
         animation.play();
@@ -122,24 +145,25 @@ public class BreakerGame extends Application {
         stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
 
-        /*Temp until Ball class is implemented */
-        //var image = new Image(this.getClass().getClassLoader().getResourceAsStream("ball.gif"));
+        //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif");
-        myBall.setX(width / 2 - myBall.myImageView.getBoundsInLocal().getWidth() / 2);
-        myBall.setY(height - 35 - myBall.myImageView.getBoundsInLocal().getHeight() / 2);
+        var ballX = width / 2 - myBall.getWidth() / 2;
+        var ballY = height - 35 - myBall.getHeight() / 2;
+        myBall.setPosition(ballX, ballY);
 
         myPaddle = new Paddle("paddle.gif");
-        double x = width / 2 - myPaddle.getWidth() / 2;
-        double y = height - 25 - myPaddle.getHeight() / 2;
-        myPaddle.setInitialPosition(x, y);
+        var paddleX = width / 2 - myPaddle.getWidth() / 2;
+        var paddleY = height - 25 - myPaddle.getHeight() / 2;
+        myPaddle.setPosition(paddleX, paddleY);
 
         root.getChildren().add(myBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
         myBricks = generateBricks(root, width, height);
+        livesLeft = 3;
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        // respond to input
+
         return stageOne;
     }
 
@@ -151,11 +175,13 @@ public class BreakerGame extends Application {
         int currentY = 50;
         int currentX = 0;
         while (true){
-            var b = new Brick("brick" + brickType + ".gif");
-            b.setInitialPosition(currentX, currentY);
+
+            var b = new Brick("brick" + brickType + ".gif", width, height);
+            b.setPosition(currentX, currentY);
             root.getChildren().add(b.getMyImageView());
             list.add(b);
-            if (currentX + b.getMyImageView().getBoundsInLocal().getWidth() > width){
+            if (count == 6){
+                count = 0;
                 if (currentY + b.getHeight() >= height - 200){
                     break;
                 }
@@ -166,14 +192,18 @@ public class BreakerGame extends Application {
             }
             else{
                 currentX += b.getMyImageView().getBoundsInLocal().getWidth();
+                count++;
             }
-            count++;
         }
         return list;
     }
 
 
+
+
     private void handleKeyInput (KeyCode code) {
+
+        //paddle controls
         int paddleSpeed = myPaddle.getSpeed();
         if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
             myPaddle.setX(myPaddle.getX() + paddleSpeed);
@@ -191,7 +221,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
-        //pause game
+        //freeze the ball
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
@@ -201,7 +231,6 @@ public class BreakerGame extends Application {
             }
         }
     }
-
 
     public static void main (String[] args) {
         launch(args);
