@@ -74,19 +74,18 @@ public class BreakerGame extends Application {
     private void checkAndHandleCollisions() {
         for (Brick s: myBricks) {
             if (isCollided(myBall, s)) {
+                myBall.brickCollision(s);
                 s.handleCollision();
-//                NEED TO IMPLEMENT BALL CLASS FIRST
-                  //myBall.handleCollision(myPaddle, myBricks);
             }
         }
         if (isCollided(myBall, myPaddle)){
-            myBall.handleCollision(myPaddle, myBricks);
+            myBall.paddleCollision(myPaddle);
         }
     }
 
     //TEMPORARY UNTIL BALL IS IMPLEMENTED
     private boolean isCollided(Sprite a, Sprite b){
-        return a.myImageView.getBoundsInLocal().intersects(b.myImageView.getBoundsInLocal());
+        return a.myImageView.getBoundsInParent().intersects(b.myImageView.getBoundsInParent());
     }
 
     //THE REAL isCollided()
@@ -182,20 +181,23 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
             myPaddle.setX(myPaddle.getX() - paddleSpeed);
         }
+        //make ball go faster
         else if (code == KeyCode.F) {
             myBall.changeSpeed(myBall.getSpeed() + 1);
         }
+        //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 2) {
+            if (myBall.getSpeed() >= 2.5) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
+        //pause game
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(1);
+                myBall.changeSpeed(1.5);
             }
         }
     }
