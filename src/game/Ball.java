@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Ball extends Sprite {
     private double x_dir;
@@ -14,12 +15,11 @@ public class Ball extends Sprite {
     public static final int WIDTH = 750;
     public static final int HEIGHT = 500;
 
-
     public Ball(String filename){
         super(filename);
         myImageView.setFitWidth(15);
         myImageView.setFitWidth(15);
-        x_dir = 100;
+        x_dir = 100 - 200 * Math.random();
         y_dir = 100;
         ball_speed = 1;
     }
@@ -28,32 +28,37 @@ public class Ball extends Sprite {
         this.ball_speed = speed;
     }
 
+    public int getSpeed() {
+        return this.ball_speed;
+    }
+
     public void updateX_bounds() {
         if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getX() <= 0) {
             this.x_dir *= -1;
         }
     }
 
-    public void updateY_bounds() {
+    public void updateY_bounds(Paddle myPaddle) {
         if(this.myImageView.getY() <= 0) {
             this.y_dir *= -1;
         }
         if(this.myImageView.getY() >= HEIGHT) {
-            resetBall();
+            reset(myPaddle);
         }
     }
 
-    public void resetBall() {
+    public void reset(Paddle myPaddle) {
         this.myImageView.setX(WIDTH / 2 - this.myImageView.getBoundsInLocal().getWidth() / 2);
         this.myImageView.setY(HEIGHT - 35 - this.myImageView.getBoundsInLocal().getHeight() / 2);
         ball_speed = 0;
+        myPaddle.setInitialPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
     }
 
-    public void incrementPos(double elapsedTime) {
+    public void incrementPos(double elapsedTime, Paddle myPaddle) {
         this.myImageView.setX(this.myImageView.getX() + x_dir * this.ball_speed * elapsedTime);
         this.myImageView.setY(this.myImageView.getY() - y_dir * this.ball_speed * elapsedTime);
         updateX_bounds();
-        updateY_bounds();
+        updateY_bounds(myPaddle);
     }
 
     public void handleCollision(Paddle myPaddle,  ArrayList<Brick> myBricks) {

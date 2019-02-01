@@ -68,7 +68,7 @@ public class BreakerGame extends Application {
 
     private void updateSprites(double elapsedTime) {
         //myBall.setY(myBall.getY() - 100 * elapsedTime);
-        myBall.incrementPos(elapsedTime);
+        myBall.incrementPos(elapsedTime, myPaddle);
     }
 
     private void checkAndHandleCollisions() {
@@ -76,7 +76,7 @@ public class BreakerGame extends Application {
             if (isCollided(myBall, s)) {
                 s.handleCollision();
 //                NEED TO IMPLEMENT BALL CLASS FIRST
-//                myBall.handleCollision();
+                  //myBall.handleCollision(myPaddle, myBricks);
             }
         }
         if (isCollided(myBall, myPaddle)){
@@ -181,6 +181,22 @@ public class BreakerGame extends Application {
         }
         else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
             myPaddle.setX(myPaddle.getX() - paddleSpeed);
+        }
+        else if (code == KeyCode.F) {
+            myBall.changeSpeed(myBall.getSpeed() + 1);
+        }
+        else if (code == KeyCode.S) {
+            if (myBall.getSpeed() >= 2) {
+                myBall.changeSpeed(myBall.getSpeed() -1);
+            }
+        }
+        else if (code == KeyCode.SPACE) {
+            if(myBall.getSpeed() != 0) {
+                myBall.changeSpeed(0);
+            }
+            else {
+                myBall.changeSpeed(1);
+            }
         }
     }
 
