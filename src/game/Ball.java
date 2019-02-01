@@ -28,14 +28,6 @@ public class Ball extends Sprite {
         this.ball_speed = speed;
     }
 
-    public double getX_dir() {
-        return this.x_dir;
-    }
-
-    public double getY_dir() {
-        return this.y_dir;
-    }
-
     public void updateX_bounds() {
         if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getX() <= 0) {
             this.x_dir *= -1;
@@ -73,46 +65,36 @@ public class Ball extends Sprite {
         double ball_location = this.myImageView.getX()+ this.myImageView.getBoundsInLocal().getWidth() / 2;
         double paddle_increment = myPaddle.myImageView.getBoundsInLocal().getWidth() / 10;
         if (ball_location <= myPaddle.myImageView.getX() + paddle_increment) {
-            x_dir = -115;
-            y_dir = 100;
+            x_dir = -100;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 2 * paddle_increment) {
-            x_dir = -110;
-            y_dir = 100;
+            x_dir = -80;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 3 * paddle_increment) {
-            x_dir = -105;
-            y_dir = 100;
+            x_dir = -60;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 4 * paddle_increment) {
-            x_dir = -102.5;
-            y_dir = 100;
+            x_dir = -40;
         }
         else if (ball_location <= myPaddle.myImageView.getX() + 5 * paddle_increment) {
-            x_dir = 100;
-            y_dir = 100;
+            x_dir = -20;
         }
         else if (ball_location >= myPaddle.myImageView.getX() + 5 * paddle_increment) {
-            x_dir = 100;
-            y_dir = 100;
+            x_dir = 20;
         }
         else if (ball_location >= myPaddle.myImageView.getX() + 6 * paddle_increment) {
-            x_dir = 102.5;
-            y_dir = 100;
+            x_dir = 40;
         }
         else if (ball_location >= myPaddle.myImageView.getX() + 7 * paddle_increment) {
-            x_dir = 105;
-            y_dir = 100;
+            x_dir = 60;
         }
         else if (ball_location >= myPaddle.myImageView.getX() + 8 * paddle_increment) {
-            x_dir = 110;
-            y_dir = 100;
+            x_dir = 80;
         }
         else if (ball_location >= myPaddle.myImageView.getX() + 9 * paddle_increment) {
-            x_dir = 115;
-            y_dir = 100;
+            x_dir = 100;
         }
-
+        y_dir = 100;
     }
 
     private void brickCollision(ArrayList<Brick> myBricks) {
