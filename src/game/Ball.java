@@ -8,13 +8,15 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 
-public class Ball extends BreakerGame {
+public class Ball extends Sprite {
     public static final String BALL_IMAGE = "ball.gif";
     private double x_dir;
     private double y_dir;
     private int ball_speed;
     private Ball myBall;
     private ImageView ballImage;
+    public static final int WIDTH = 750;
+    public static final int HEIGHT = 500;
 
     public Ball(int speed, ImageView image) {
         x_dir = 1;
@@ -22,8 +24,6 @@ public class Ball extends BreakerGame {
         ball_speed = speed;
         ballImage = image;
     }
-
-
 
     public void changeSpeed(int speed) {
         this.ball_speed = speed;
@@ -51,18 +51,39 @@ public class Ball extends BreakerGame {
         this.y_dir *= -1;
     }
 
-    private void updateX_dir() {
+    private void updateX_bounds() {
         if(this.ballImage.getBoundsInParent().getMaxX() >= WIDTH || this.ballImage.getX() <= 0) {
             changeX_dir();
         }
     }
 
-
-
-    public Ball updateFinalPos(double elapsedTime, ImageView paddle, Timeline animation, Stage s, ArrayList<Brick> myBricks,
-                          int speed) {
-        updateX_dir();
-        return this;
+    private void updateY_bounds() {
+        if(this.ballImage.getBoundsInParent().getMaxY() >= HEIGHT || this.ballImage.getY() <= 0) {
+            changeY_dir();
+        }
     }
+
+    public void incrementPos(double elapsedTime) {
+        this.ballImage.setX(this.ballImage.getX() + x_dir * this.ball_speed * elapsedTime);
+        this.ballImage.setY(this.ballImage.getY() - y_dir * this.ball_speed * elapsedTime);
+    }
+
+    public void handleCollision(double elapsedTime, Paddle myPaddle, Timeline animation, Stage s, ArrayList<Brick> myBricks) {
+        updateX_bounds();
+        updateY_bounds();
+        paddleCollision(myPaddle);
+        brickCollision(myBricks);
+        incrementPos(elapsedTime);
+    }
+
+    private void paddleCollision(Paddle paddle) {
+
+    }
+
+    private void brickCollision(ArrayList<Brick> myBricks) {
+
+
+    }
+
 
 }

@@ -13,7 +13,6 @@ public class Brick extends Sprite{
         myImageView.setFitHeight(myImageView.getBoundsInLocal().getHeight()*2);
     }
 
-    @Override
     public void handleCollision() {
         setX(getX() + 10000);
     }

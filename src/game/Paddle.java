@@ -16,8 +16,4 @@ public class Paddle extends Sprite{
     public static int getSpeed() {
         return PADDLE_SPEED;
     }
-
-    @Override
-    protected void handleCollision() { }
-
 }

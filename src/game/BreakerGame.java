@@ -42,6 +42,7 @@ public class BreakerGame extends Application {
 
     //dunno if we wanna store them like this
     ImageView myBall;
+    //Ball myBall;
     ArrayList<Brick> myBricks;
     Paddle myPaddle;
 
@@ -68,6 +69,7 @@ public class BreakerGame extends Application {
 
     private void updateSprites(double elapsedTime) {
         myBall.setY(myBall.getY() - 100 * elapsedTime);
+        //myBall.updateFinalPos(elapsedTime, myPaddle, gameLoop, primaryStage, myBricks);
     }
 
     private void checkAndHandleCollisions() {

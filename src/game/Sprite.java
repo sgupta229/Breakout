@@ -5,6 +5,10 @@ import javafx.scene.image.ImageView;
 
 public abstract class Sprite {
 
+    public Sprite() {
+
+    }
+
     public Sprite(String filename){
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(filename));
         myImageView = new ImageView(image);
@@ -44,8 +48,4 @@ public abstract class Sprite {
     public double getHeight(){
         return myImageView.getBoundsInLocal().getHeight();
     }
-
-
-
-    protected abstract void handleCollision();
 }
