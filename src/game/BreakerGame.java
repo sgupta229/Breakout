@@ -33,13 +33,15 @@ public class BreakerGame extends Application {
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
-    public static final int WIDTH = 750;
+    public static final int WIDTH = 752;
     public static final int HEIGHT = 500;
     private Timeline animation;
     private Scene myScene;
 
     private Ball myBall;
     private ArrayList<Brick> myBricks;
+    private double brickWidth = 94;
+    private double brickHeight = 40;
     private Paddle myPaddle;
 
     private int livesLeft;
@@ -179,7 +181,7 @@ public class BreakerGame extends Application {
         root.getChildren().add(myBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height);
+        myBricks = generateBricks(root, width, height, "lvl1_config.txt");
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -216,37 +218,28 @@ public class BreakerGame extends Application {
         root.getChildren().addAll(lifeCount, levelNum, scoreText);
     }
 
-    private ArrayList<Brick> generateBricks(Group root, double width, double height) {
-        var list = new ArrayList<Brick>();
-
-        int count = 0;
-        int brickType = 5;
-        int currentY = 50;
-        int currentX = 0;
-        while (true){
-
-            var b = new Brick("brick" + brickType + ".gif", width, height);
-            b.setPosition(currentX, currentY);
-            root.getChildren().add(b.getMyImageView());
-            list.add(b);
-            if (count == 6){
-                count = 0;
-                if (currentY + b.getHeight() >= height - 200){
-                    break;
-                }
+    private ArrayList<Brick> generateBricks(Group root, double width, double height, String lvlConfigFile) {
+        var brickList = new ArrayList<Brick>();
+        var configList = readConfigFile(lvlConfigFile);
+        double currentX = 0;
+        double currentY = 0;
+        for (int num: configList){
+            if (num != 0){
+                var b = new Brick("brick" + num + ".gif", width, height);
+                b.setPosition(currentX, currentY);
+                root.getChildren().add(b.getMyImageView());
+                brickList.add(b);
+            }
+            if (currentX + brickWidth >= WIDTH){
                 currentX = 0;
-                currentY += b.getHeight();
-                if (brickType == 1) brickType = 5;
-                else brickType -= 1;
+                currentY += brickHeight;
             }
-            else{
-                currentX += b.getMyImageView().getBoundsInLocal().getWidth();
-                count++;
-            }
+            else currentX += brickWidth;
         }
-        return list;
-    }
 
+
+        return brickList;
+    }
 
     private void handleKeyInput (KeyCode code) {
 
