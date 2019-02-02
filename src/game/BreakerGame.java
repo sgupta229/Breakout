@@ -41,9 +41,11 @@ public class BreakerGame extends Application {
     private ArrayList<Brick> myBricks;
     private Paddle myPaddle;
 
-    private Group currRoot;
     private int livesLeft;
-    private Label lifeCount;
+    private Text lifeCount;
+    private Text levelNum = new Text();
+    private Text scoreText = new Text();
+    private int scoreNum;
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
@@ -60,13 +62,12 @@ public class BreakerGame extends Application {
 
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
-
+        levelNum.setText("Level: " + currLevel());
+        scoreText.setText("Score: " + scoreNum);
         //check for loss
         if (lostALife){
             livesLeft -= 1;
-            currRoot.getChildren().remove(lifeCount);
-            lifeCount = new Label("Lives: " + livesLeft);
-            currRoot.getChildren().add(lifeCount);
+            lifeCount.setText("Lives: " + livesLeft);
             if (livesLeft <= 0){
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
@@ -89,6 +90,7 @@ public class BreakerGame extends Application {
         var toRemove = new ArrayList();
         for (Brick b: myBricks) {
             if (isCollided(myBall, b)) {
+                scoreNum += 100;
                 myBall.brickCollision(b);
                 b.handleCollision();
                 toRemove.add(b);
@@ -148,15 +150,12 @@ public class BreakerGame extends Application {
         animation.getKeyFrames().add(frame);
         animation.play();
 
-        livesLeft = 3;
-        lifeCount = new Label("Lives: " + livesLeft);
-
+        var root = new  Group();
         // create one top level collection to organize the things in the scene
-        currRoot = new Group();
         // create a place to see the shapes
-        stageOne = new Scene(currRoot, width, height, background);
+        stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
-        currRoot.getChildren().add(lifeCount);
+        setUpText(root);
 
         //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif");
@@ -170,14 +169,45 @@ public class BreakerGame extends Application {
         var paddleY = height - 25 - myPaddle.getHeight() / 2;
         myPaddle.setPosition(paddleX, paddleY);
 
-        currRoot.getChildren().add(myBall.getMyImageView());
-        currRoot.getChildren().add(myPaddle.getMyImageView());
+        root.getChildren().add(myBall.getMyImageView());
+        root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(currRoot, width, height);
+        myBricks = generateBricks(root, width, height);
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
         return stageOne;
+    }
+
+    private int currLevel() {
+        if(primaryStage.getScene() == this.stageOne) {
+            return 1;
+        }
+        else if(primaryStage.getScene() == this.stageTwo) {
+            return 2;
+        }
+        else if(primaryStage.getScene() == this.stageThree) {
+            return 3;
+        }
+        return 0;
+    }
+
+    private void setUpText(Group root) {
+        livesLeft = 3;
+        lifeCount = new Text("Lives: " + livesLeft);
+        lifeCount.setX(5);
+        lifeCount.setY(15);
+        lifeCount.setFill(Color.ORANGERED);
+        lifeCount.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        levelNum.setX(360);
+        levelNum.setY(15);
+        levelNum.setFill(Color.GREEN);
+        levelNum.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        scoreText.setX(675);
+        scoreText.setY(15);
+        scoreText.setFill(Color.BLUEVIOLET);
+        scoreText.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        root.getChildren().addAll(lifeCount, levelNum, scoreText);
     }
 
     private ArrayList<Brick> generateBricks(Group root, double width, double height) {
@@ -248,6 +278,7 @@ public class BreakerGame extends Application {
 
         else if (code == KeyCode.L){
             livesLeft += 1;
+            lifeCount.setText("Lives: " + livesLeft);
         }
         else if (code == KeyCode.R){
             myBall.reset(myPaddle);
