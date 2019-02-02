@@ -118,11 +118,13 @@ public class BreakerGame extends Application {
         if (livesLeft <= 0) str = "lost";
         else str = "win";
         Label label1 = new Label("You " + str + "! Press the button to play again!");
+        Label finalScore = new Label("Your final score was: " + scoreNum);
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Play Again");
         startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
 
-        vb.getChildren().addAll(label1, startButton);
+        vb.getChildren().addAll(label1, finalScore, startButton);
         return scene;
     }
 
