@@ -12,12 +12,18 @@ public class Ball extends Sprite {
         myImageView.setFitWidth(15);
         myImageView.setFitWidth(15);
         x_dir = 100 - 200 * Math.random();
-        y_dir = 100;
+        y_dir = -100;
         ball_speed = 1.5;
     }
 
     public void changeSpeed(double speed) {
         this.ball_speed = speed;
+    }
+
+    public void changeSpeedAndVelocity(double speed, int vX, int vY) {
+        this.ball_speed = speed;
+        this.x_dir = vX;
+        this.y_dir = vY;
     }
 
     public double getSpeed() {
@@ -29,6 +35,8 @@ public class Ball extends Sprite {
             this.x_dir *= -1;
         }
     }
+
+
 
     public boolean updateY_bounds(Paddle myPaddle) {
         if(getY() <= 0) {
@@ -42,14 +50,14 @@ public class Ball extends Sprite {
     }
 
     public void reset(Paddle myPaddle) {
-        setPosition(WIDTH / 2 - this.getWidth() / 2, HEIGHT - 35 - this.getHeight() / 2);
+        setPosition(WIDTH / 2 - this.getWidth() / 2, HEIGHT - 40 - this.getHeight() / 2);
         ball_speed = 0;
         myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
     }
 
     public boolean incrementPos(double elapsedTime, Paddle myPaddle) {
         setPosition(this.getX() + x_dir * this.ball_speed * elapsedTime,
-                this.getY() - y_dir * this.ball_speed * elapsedTime);
+                this.getY() + y_dir * this.ball_speed * elapsedTime);
         updateX_bounds();
         return updateY_bounds(myPaddle);
     }
@@ -89,7 +97,10 @@ public class Ball extends Sprite {
         else if (ball_location >= myPaddle.getX() + 6 * paddle_increment) {
             x_dir = 20;
         }
-        y_dir = 100;
+        else if (ball_location == myPaddle.getX() + 6 * paddle_increment) {
+            x_dir = 0;
+        }
+        y_dir = -100;
     }
 
     public void brickCollision(Brick brick) {
