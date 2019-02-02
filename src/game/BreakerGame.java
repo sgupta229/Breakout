@@ -73,12 +73,10 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-
         //check for win
         if (myBricks.isEmpty()){
             primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
         }
-
         checkAndHandleCollisions();
     }
 
@@ -116,9 +114,10 @@ public class BreakerGame extends Application {
         var scene = new Scene(vb, width, height, background);
 
         String str;
-        if (livesLeft <= 0) str = "lost";
-        else str = "win";
-        Label label1 = new Label("You " + str + "! Press the button to play again!");
+
+        if (livesLeft <= 0) str = "lost :(.";
+        else str = "win :D!";
+        Label label1 = new Label("You " + str + " Press the button to play again!");
 
         Label finalScore = new Label("Your final score was: " + scoreNum);
 
@@ -230,7 +229,7 @@ public class BreakerGame extends Application {
             list.add(b);
             if (count == 6){
                 count = 0;
-                if (currentY + b.getHeight() >= height - 200){
+                if (currentY + b.getHeight() >= height - 300){
                     break;
                 }
                 currentX = 0;
@@ -267,7 +266,7 @@ public class BreakerGame extends Application {
         }
         //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 2.5) {
+            if (myBall.getSpeed() >= 4) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
@@ -277,7 +276,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(1.5);
+                myBall.changeSpeed(3);
             }
         }
 
