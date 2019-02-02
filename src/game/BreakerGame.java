@@ -40,7 +40,10 @@ public class BreakerGame extends Application {
     private Ball myBall;
     private ArrayList<Brick> myBricks;
     private Paddle myPaddle;
+
+    private Group currRoot;
     private int livesLeft;
+    private Label lifeCount;
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
@@ -61,7 +64,10 @@ public class BreakerGame extends Application {
         //check for loss
         if (lostALife){
             livesLeft -= 1;
-            if (livesLeft<0){
+            currRoot.getChildren().remove(lifeCount);
+            lifeCount = new Label("Lives: " + livesLeft);
+            currRoot.getChildren().add(lifeCount);
+            if (livesLeft <= 0){
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }
@@ -101,6 +107,7 @@ public class BreakerGame extends Application {
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
         animation.stop();
+
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
         var scene = new Scene(vb, width, height, background);
@@ -142,14 +149,14 @@ public class BreakerGame extends Application {
         animation.play();
 
         livesLeft = 3;
-        Label livesLabel = new Label(Integer.toString(livesLeft));
+        lifeCount = new Label("Lives: " + livesLeft);
 
         // create one top level collection to organize the things in the scene
-        var root = new Group();
+        currRoot = new Group();
         // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
+        stageOne = new Scene(currRoot, width, height, background);
         // make some shapes and set their properties
-        root.getChildren().add(livesLabel);
+        currRoot.getChildren().add(lifeCount);
 
         //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif");
@@ -163,10 +170,10 @@ public class BreakerGame extends Application {
         var paddleY = height - 25 - myPaddle.getHeight() / 2;
         myPaddle.setPosition(paddleX, paddleY);
 
-        root.getChildren().add(myBall.getMyImageView());
-        root.getChildren().add(myPaddle.getMyImageView());
+        currRoot.getChildren().add(myBall.getMyImageView());
+        currRoot.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height);
+        myBricks = generateBricks(currRoot, width, height);
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -210,10 +217,14 @@ public class BreakerGame extends Application {
         //paddle controls
         int paddleSpeed = myPaddle.getSpeed();
         if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
-            myPaddle.setX(myPaddle.getX() + paddleSpeed);
+            if(myBall.getSpeed() != 0) {
+                myPaddle.setX(myPaddle.getX() + paddleSpeed);
+            }
         }
         else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
-            myPaddle.setX(myPaddle.getX() - paddleSpeed);
+            if(myBall.getSpeed() != 0) {
+                myPaddle.setX(myPaddle.getX() - paddleSpeed);
+            }
         }
         //make ball go faster
         else if (code == KeyCode.F) {
