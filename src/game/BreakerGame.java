@@ -108,6 +108,7 @@ public class BreakerGame extends Application {
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
         animation.stop();
+        scoreNum = 0;
 
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
@@ -135,7 +136,7 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' to freeze the ball" +
+        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' \nto freeze the ball" +
                 ", 'F' to speed the ball up, and 'S' to slow the ball down.");
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Start Game");
@@ -354,7 +355,6 @@ public class BreakerGame extends Application {
         root.getChildren().add(b.getMyImageView());
 
         root.getChildren().add(myBall.getMyImageView());
-
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
