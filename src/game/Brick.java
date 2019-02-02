@@ -6,7 +6,7 @@ public class Brick extends Sprite{
         super(filename);
 
         //In reality we should use the dimensions of the scene to determine the width
-        myImageView.setFitWidth(sceneWidth / 7);
+        myImageView.setFitWidth(sceneWidth / 8);
         myImageView.setFitHeight(myImageView.getBoundsInLocal().getHeight()*2);
     }
 
