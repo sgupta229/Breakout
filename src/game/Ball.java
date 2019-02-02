@@ -13,7 +13,7 @@ public class Ball extends Sprite {
         myImageView.setFitWidth(15);
         x_dir = 100 - 200 * Math.random();
         y_dir = 100;
-        ball_speed = 3.0;
+        ball_speed = 2.0;
     }
 
     public void changeSpeed(double speed) {
