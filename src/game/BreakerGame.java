@@ -93,7 +93,7 @@ public class BreakerGame extends Application {
         var toRemove = new ArrayList();
         for (Brick b: myBricks) {
             if (isCollided(myBall, b)) {
-                scoreNum += 100;
+                scoreNum += b.getBrickType();
                 myBall.brickCollision(b);
                 b.handleCollision();
                 toRemove.add(b);
@@ -281,6 +281,10 @@ public class BreakerGame extends Application {
         }
         else if (code == KeyCode.R){
             myBall.reset(myPaddle);
+        }
+        //for some reason this speeds up the ball
+        else if (code == KeyCode.M){
+            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
             setupForTestScene();
