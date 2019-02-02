@@ -26,6 +26,7 @@ import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class BreakerGame extends Application {
     private static final int FRAMES_PER_SECOND = 60;
@@ -118,7 +119,9 @@ public class BreakerGame extends Application {
         if (livesLeft <= 0) str = "lost";
         else str = "win";
         Label label1 = new Label("You " + str + "! Press the button to play again!");
+
         Label finalScore = new Label("Your final score was: " + scoreNum);
+
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Play Again");
@@ -133,7 +136,7 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' to start/pause \nthe game" +
+        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' to freeze the ball" +
                 ", 'F' to speed the ball up, and 'S' to slow the ball down.");
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Start Game");
@@ -285,6 +288,112 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.R){
             myBall.reset(myPaddle);
         }
+        else if (code == KeyCode.COMMA){
+            setupForTestScene();
+            primaryStage.setScene(setupTestSceneCornerBounce(WIDTH, HEIGHT, BACKGROUND));
+        }
+        else if (code == KeyCode.PERIOD){
+            setupForTestScene();
+            primaryStage.setScene(setupTestSceneBrickDestroy(WIDTH, HEIGHT, BACKGROUND));
+
+        }
+        else if (code == KeyCode.SLASH){
+            setupForTestScene();
+            primaryStage.setScene(setupTestSceneLoseLife(WIDTH, HEIGHT, BACKGROUND));
+        }
+    }
+
+    private void setupForTestScene() {
+        myBricks.clear();
+        var b = new Brick("brick1.gif", 1, 1);
+        b.setPosition(10000, 0);
+        myBricks.add(b);
+    }
+
+    private Scene setupTestSceneCornerBounce(int width, int height, Paint background){
+        // create one top level collection to organize the things in the scene
+        var root = new Group();
+        // create a place to see the shapes
+        stageOne = new Scene(root, width, height, background);
+        // make some shapes and set their properties
+
+        myBall = new Ball("ball.gif");
+
+        var ballX = 100;
+        var ballY = 100;
+        myBall.setPosition(ballX, ballY);
+        myBall.changeSpeedAndVelocity(2, -100, -100);
+
+        root.getChildren().add(myBall.getMyImageView());
+
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+
+        return stageOne;
+    }
+
+    private Scene setupTestSceneBrickDestroy(int width, int height, Paint background){
+
+        // create one top level collection to organize the things in the scene
+        var root = new Group();
+        // create a place to see the shapes
+        stageOne = new Scene(root, width, height, background);
+        // make some shapes and set their properties
+
+        //Should we put setPosition in the constructor?
+        myBall = new Ball("ball.gif");
+
+        var ballX = width / 2 - myBall.getWidth() / 2;
+        var ballY = height - 35 - myBall.getHeight() / 2;
+        myBall.setPosition(ballX, ballY);
+        myBall.changeSpeedAndVelocity(2, 0, 100);
+
+
+        var b = new Brick("brick1.gif", WIDTH, HEIGHT);
+        b.setPosition(WIDTH / 2 - b.getWidth() / 2, HEIGHT / 2);
+        myBricks.add(b);
+
+        root.getChildren().add(myBall.getMyImageView());
+        root.getChildren().add(b.getMyImageView());
+
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+
+        return stageOne;
+    }
+
+    private Scene setupTestSceneLoseLife(int width, int height, Paint background){
+//        getConfigs();
+
+        // create one top level collection to organize the things in the scene
+        var root = new Group();
+        // create a place to see the shapes
+        stageOne = new Scene(root, width, height, background);
+        // make some shapes and set their properties
+
+        //Should we put setPosition in the constructor?
+        myBall = new Ball("ball.gif");
+
+        var ballX = width / 2 - myBall.getWidth() / 2;
+        var ballY = height / 2 - myBall.getHeight() / 2;
+        myBall.setPosition(ballX, ballY);
+        myBall.changeSpeedAndVelocity(2, 0, 100);
+
+        myPaddle.setPosition(1000, 1000);
+
+        root.getChildren().add(myBall.getMyImageView());
+
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+
+        return stageOne;
+    }
+
+    private ArrayList<Integer> getConfigs(String filename) {
+        var input = new Scanner(this.getClass().getClassLoader().getResourceAsStream(filename));
+        input.useDelimiter(" |\\n");
+        ArrayList<Integer> results = new ArrayList<>();
+        while (input.hasNext()) {
+            results.add(input.nextInt());
+        }
+        return results;
     }
 
     public static void main (String[] args) {
