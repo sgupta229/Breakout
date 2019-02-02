@@ -159,6 +159,8 @@ public class BreakerGame extends Application {
         // create a place to see the shapes
         stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
+
+        livesLeft = 3;
         setUpText(root);
 
         //Should we put setPosition in the constructor?
@@ -197,7 +199,6 @@ public class BreakerGame extends Application {
     }
 
     private void setUpText(Group root) {
-        livesLeft = 3;
         lifeCount = new Text("Lives: " + livesLeft);
         lifeCount.setX(5);
         lifeCount.setY(15);
@@ -289,16 +290,16 @@ public class BreakerGame extends Application {
         }
         else if (code == KeyCode.COMMA){
             setupForTestScene();
-            primaryStage.setScene(setupTestSceneCornerBounce(WIDTH, HEIGHT, BACKGROUND));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "corner_bounce.txt"));
         }
         else if (code == KeyCode.PERIOD){
             setupForTestScene();
-            primaryStage.setScene(setupTestSceneBrickDestroy(WIDTH, HEIGHT, BACKGROUND));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "brick_destroy.txt"));
 
         }
         else if (code == KeyCode.SLASH){
             setupForTestScene();
-            primaryStage.setScene(setupTestSceneLoseLife(WIDTH, HEIGHT, BACKGROUND));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "lose_life.txt"));
         }
     }
 
@@ -309,86 +310,8 @@ public class BreakerGame extends Application {
         myBricks.add(b);
     }
 
-    private Scene setupTestSceneCornerBounce(int width, int height, Paint background){
-        // create one top level collection to organize the things in the scene
-        var root = new Group();
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
-
-        myBall = new Ball("ball.gif");
-
-        var ballX = 100;
-        var ballY = 100;
-        myBall.setPosition(ballX, ballY);
-        myBall.changeSpeedAndVelocity(2, -100, -100);
-
-        root.getChildren().add(myBall.getMyImageView());
-
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
-        return stageOne;
-    }
-
-    private Scene setupTestSceneBrickDestroy(int width, int height, Paint background){
-
-        // create one top level collection to organize the things in the scene
-        var root = new Group();
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
-
-        //Should we put setPosition in the constructor?
-        myBall = new Ball("ball.gif");
-
-        var ballX = width / 2 - myBall.getWidth() / 2;
-        var ballY = height - 35 - myBall.getHeight() / 2;
-        myBall.setPosition(ballX, ballY);
-        myBall.changeSpeedAndVelocity(2, 0, 100);
-
-
-
-        var b = new Brick("brick1.gif", WIDTH, HEIGHT);
-        b.setPosition(WIDTH / 2 - b.getWidth() / 2, HEIGHT / 2);
-        myBricks.add(b);
-        root.getChildren().add(b.getMyImageView());
-
-        root.getChildren().add(myBall.getMyImageView());
-
-
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
-        return stageOne;
-    }
-
-    private Scene setupTestSceneLoseLife(int width, int height, Paint background){
-//        getConfigs();
-
-        // create one top level collection to organize the things in the scene
-        var root = new Group();
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
-
-        //Should we put setPosition in the constructor?
-        myBall = new Ball("ball.gif");
-
-        var ballX = width / 2 - myBall.getWidth() / 2;
-        var ballY = height / 2 - myBall.getHeight() / 2;
-        myBall.setPosition(ballX, ballY);
-        myBall.changeSpeedAndVelocity(2, 0, 100);
-
-        myPaddle.setPosition(1000, 1000);
-
-        root.getChildren().add(myBall.getMyImageView());
-
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
-        return stageOne;
-    }
-
-    public Scene setupForTest(int width, int height, Paint background, String testFile){
-        var config = getConfigs(testFile);
+    private Scene setupForTest(int width, int height, Paint background, String testFile){
+        var config = readConfigFile(testFile);
 
         var root = new  Group();
         stageOne = new Scene(root, width, height, background);
@@ -405,7 +328,6 @@ public class BreakerGame extends Application {
         if (config.get(6) == 1) {
             myPaddle = new Paddle("paddle.gif");
             myPaddle.setPosition(config.get(7), config.get(8));
-
             root.getChildren().add(myPaddle.getMyImageView());
         }
 
@@ -420,7 +342,7 @@ public class BreakerGame extends Application {
         return stageOne;
     }
 
-    private ArrayList<Integer> getConfigs(String filename) {
+    private ArrayList<Integer> readConfigFile(String filename) {
         var input = new Scanner(this.getClass().getClassLoader().getResourceAsStream(filename));
         input.useDelimiter(" |\\n");
         ArrayList<Integer> results = new ArrayList<>();
