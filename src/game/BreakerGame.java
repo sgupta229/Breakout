@@ -110,7 +110,6 @@ public class BreakerGame extends Application {
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
         animation.stop();
-        scoreNum = 0;
 
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
@@ -123,6 +122,7 @@ public class BreakerGame extends Application {
         Label label1 = new Label("You " + str + " Press the button to play again!");
 
         Label finalScore = new Label("Your final score was: " + scoreNum);
+        scoreNum = 0;
 
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
