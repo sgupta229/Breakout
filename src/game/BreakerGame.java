@@ -348,12 +348,14 @@ public class BreakerGame extends Application {
         myBall.changeSpeedAndVelocity(2, 0, 100);
 
 
+
         var b = new Brick("brick1.gif", WIDTH, HEIGHT);
         b.setPosition(WIDTH / 2 - b.getWidth() / 2, HEIGHT / 2);
         myBricks.add(b);
+        root.getChildren().add(b.getMyImageView());
 
         root.getChildren().add(myBall.getMyImageView());
-        root.getChildren().add(b.getMyImageView());
+
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -383,6 +385,39 @@ public class BreakerGame extends Application {
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
+        return stageOne;
+    }
+
+    public Scene setupForTest(int width, int height, Paint background, String testFile){
+        var config = getConfigs(testFile);
+
+        var root = new  Group();
+        stageOne = new Scene(root, width, height, background);
+        setUpText(root);
+
+        if (config.get(0) == 1) {
+            myBall = new Ball("ball.gif");
+            myBall.setPosition(config.get(1), config.get(2));
+            myBall.changeSpeedAndVelocity(config.get(3), config.get(4), config.get(5));
+
+            root.getChildren().add(myBall.getMyImageView());
+        }
+
+        if (config.get(6) == 1) {
+            myPaddle = new Paddle("paddle.gif");
+            myPaddle.setPosition(config.get(7), config.get(8));
+
+            root.getChildren().add(myPaddle.getMyImageView());
+        }
+
+        if (config.get(9) == 1) {
+            var b = new Brick("brick1.gif", WIDTH, HEIGHT);
+            b.setPosition(config.get(10), config.get(11));
+            myBricks.add(b);
+            root.getChildren().add(b.getMyImageView());
+        }
+
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return stageOne;
     }
 
