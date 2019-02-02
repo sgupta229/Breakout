@@ -12,8 +12,8 @@ public class Ball extends Sprite {
         myImageView.setFitWidth(15);
         myImageView.setFitWidth(15);
         x_dir = 100 - 200 * Math.random();
-        y_dir = -100;
-        ball_speed = 1.5;
+        y_dir = 100;
+        ball_speed = 3.0;
     }
 
     public void changeSpeed(double speed) {
@@ -31,7 +31,7 @@ public class Ball extends Sprite {
     }
 
     public void updateX_bounds() {
-        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getX() <= 0) {
+        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getBoundsInParent().getMinX() <= 0) {
             this.x_dir *= -1;
         }
     }
@@ -39,10 +39,10 @@ public class Ball extends Sprite {
 
 
     public boolean updateY_bounds(Paddle myPaddle) {
-        if(getY() <= 0) {
+        if(this.getY() <= 0) {
             this.y_dir *= -1;
         }
-        if(getY() >= HEIGHT) {
+        if(this.myImageView.getBoundsInParent().getMinY() >= HEIGHT) {
             reset(myPaddle);
             return true;
         }

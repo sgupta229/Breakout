@@ -75,12 +75,10 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-
         //check for win
         if (myBricks.isEmpty()){
             primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
         }
-
         checkAndHandleCollisions();
     }
 
@@ -112,15 +110,17 @@ public class BreakerGame extends Application {
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
         animation.stop();
+        scoreNum = 0;
 
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
         var scene = new Scene(vb, width, height, background);
 
         String str;
-        if (livesLeft <= 0) str = "lost";
-        else str = "win";
-        Label label1 = new Label("You " + str + "! Press the button to play again!");
+
+        if (livesLeft <= 0) str = "lost :(.";
+        else str = "win :D!";
+        Label label1 = new Label("You " + str + " Press the button to play again!");
 
         Label finalScore = new Label("Your final score was: " + scoreNum);
 
@@ -138,7 +138,7 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' to freeze the ball" +
+        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' \nto freeze the ball" +
                 ", 'F' to speed the ball up, and 'S' to slow the ball down.");
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Start Game");
@@ -261,7 +261,7 @@ public class BreakerGame extends Application {
         }
         //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 2.5) {
+            if (myBall.getSpeed() >= 4) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
@@ -271,7 +271,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(1.5);
+                myBall.changeSpeed(3);
             }
         }
 
