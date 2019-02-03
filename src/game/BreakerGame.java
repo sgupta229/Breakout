@@ -130,8 +130,8 @@ public class BreakerGame extends Application {
 
         String str;
 
-        if (livesLeft <= 0) str = "lost :(.";
-        else str = "win :D!";
+        if (livesLeft <= 0) str = "lost :( ";
+        else str = "win :D! ";
         Label label1 = new Label("You " + str + "Your final score was: " + scoreNum + "!");
 
 
