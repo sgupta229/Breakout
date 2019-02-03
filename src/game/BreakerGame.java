@@ -132,10 +132,10 @@ public class BreakerGame extends Application {
 
         if (livesLeft <= 0) str = "lost :(.";
         else str = "win :D!";
-        Label label1 = new Label("You " + str + "Your final score was: " + scoreNum + "!");
+        Label label1 = new Label("You " + str + " Your final score was " + scoreNum + "!");
 
 
-        Label finalScore = new Label(" Press the button to play again!");
+        Label finalScore = new Label("Press the button to play again!");
 
         scoreNum = 0;
 

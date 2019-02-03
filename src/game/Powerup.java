@@ -1,5 +1,8 @@
 package game;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Timer;
@@ -17,8 +20,8 @@ public class Powerup extends Sprite {
 
     public Powerup(String filename) {
         super(filename);
-        myImageView.setFitWidth(25);
         myImageView.setFitWidth(20);
+        myImageView.setFitHeight(20);
     }
 
     public void setY_vel(double setYVel) {
@@ -31,6 +34,15 @@ public class Powerup extends Sprite {
 
     public void bigPaddle(Paddle myPaddle) {
         myPaddle.myImageView.setFitWidth(200);
+    }
+
+    public void resetPaddleSize(Paddle myPaddle) {
+        myPaddle.myImageView.setFitWidth(175);
+    }
+
+    public void resetBallSize(Ball myBall) {
+        myBall.getMyImageView().setFitWidth(15);
+        myBall.getMyImageView().setFitHeight(15);
     }
 
     public void setBrick(Brick newBrick) {
@@ -54,8 +66,8 @@ public class Powerup extends Sprite {
     }
 
     public void sizeBall(Ball myBall) {
-        myBall.getMyImageView().setFitWidth(25);
-        myBall.getMyImageView().setFitHeight(25);
+        myBall.getMyImageView().setFitWidth(20);
+        myBall.getMyImageView().setFitHeight(20);
     }
 
     public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall) {
@@ -78,10 +90,16 @@ public class Powerup extends Sprite {
         if(this.getPowerType().equals("pointspower.gif")) {
             bigPaddle(myPaddle);
             this.setX(1000);
+            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+            delay.setOnFinished(event -> resetPaddleSize(myPaddle));
+            delay.play();
         }
         if(this.getPowerType().equals("sizepower.gif")) {
             sizeBall(myBall);
             this.setX(1000);
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished( event -> resetBallSize(myBall));
+            delay.play();
         }
     }
 }
