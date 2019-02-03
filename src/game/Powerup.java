@@ -11,7 +11,7 @@ public class Powerup extends Sprite {
     private ArrayList<Powerup> powerList;
     public static final int BRICK_WIDTH = 94;
     //current power types
-        //big paddle
+        //pointspower.gif
         //big ball
     private String powerType;
 
@@ -21,11 +21,11 @@ public class Powerup extends Sprite {
         myImageView.setFitWidth(20);
     }
 
-    private void setY_vel(double setYVel) {
+    public void setY_vel(double setYVel) {
         this.y_vel = setYVel;
     }
 
-    private double getY_vel() {
+    public double getY_vel() {
         return this.y_vel;
     }
 
@@ -58,9 +58,14 @@ public class Powerup extends Sprite {
         myBall.getMyImageView().setFitHeight(25);
     }
 
-    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks) {
+    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall) {
         if(myBricks.contains(this.getBrick()) == false) {
-            this.setY_vel(50);
+            if(myBall.getSpeed() != 0) {
+                this.setY_vel(50);
+            }
+            else {
+                this.setY_vel(0);
+            }
             this.myImageView.setVisible(true);
         }
     }
@@ -69,9 +74,13 @@ public class Powerup extends Sprite {
         this.setY(this.getY() + this.getY_vel() * elapsedTime);
     }
 
-    public void paddleCollision(Paddle myPaddle) {
-        if(this.getPowerType().equals("bigPaddle")) {
+    public void paddleCollision(Paddle myPaddle, Ball myBall) {
+        if(this.getPowerType().equals("pointspower.gif")) {
             bigPaddle(myPaddle);
+            this.setX(1000);
+        }
+        if(this.getPowerType().equals("sizepower.gif")) {
+            sizeBall(myBall);
             this.setX(1000);
         }
     }

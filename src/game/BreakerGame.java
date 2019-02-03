@@ -69,7 +69,7 @@ public class BreakerGame extends Application {
         updateSprites(elapsedTime);
 
         for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks);
+            i.checkBrickHit(elapsedTime, myBricks, myBall);
             i.incrementPos(elapsedTime);
         }
 
@@ -111,7 +111,7 @@ public class BreakerGame extends Application {
         }
         for (Powerup p : myPowerups) {
             if(isCollided(myPaddle, p)) {
-                p.paddleCollision(myPaddle);
+                p.paddleCollision(myPaddle, myBall);
             }
         }
     }
@@ -258,15 +258,19 @@ public class BreakerGame extends Application {
 
     public ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
         Collections.shuffle(myBricks);
+        ArrayList<String> typeOfPowers = new ArrayList<String>();
+        typeOfPowers.add("pointspower.gif");
+        typeOfPowers.add("sizepower.gif");
         ArrayList<Powerup> addPowers = new ArrayList<Powerup>();
         for(int i = 0; i < 7; i++) {
-            Powerup currPow = new Powerup("pointspower.gif");
+            Collections.shuffle(typeOfPowers);
+            Powerup currPow = new Powerup(typeOfPowers.get(0));
+            currPow.setPowerType(typeOfPowers.get(0));
             currPow.setBrick(myBricks.get(i));
             Brick currBrick = currPow.getBrick();
             currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
             currPow.setY(currBrick.getY() - currPow.getMyImageView().getBoundsInLocal().getHeight() / 2 + currBrick.getMyImageView().getBoundsInLocal().getHeight()/2);
             currPow.myImageView.setVisible(false);
-            currPow.setPowerType("bigPaddle");
             root.getChildren().add(currPow.myImageView);
             addPowers.add(currPow);
         }
@@ -363,7 +367,6 @@ public class BreakerGame extends Application {
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
         }
-
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return stageOne;
     }
