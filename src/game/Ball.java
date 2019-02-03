@@ -30,6 +30,14 @@ public class Ball extends Sprite {
         return this.ball_speed;
     }
 
+    public double getXDirection(){
+        return x_dir;
+    }
+
+    public double getYDirection(){
+        return y_dir;
+    }
+
     public void updateX_bounds() {
         if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getBoundsInParent().getMinX() <= 0) {
             this.x_dir *= -1;
