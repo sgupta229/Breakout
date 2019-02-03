@@ -5,19 +5,28 @@ import java.util.Collections;
 import java.util.Timer;
 
 public class Powerup extends Sprite {
-    private double y_vel;
+    private double y_vel = 0;
     private Timer timer;
-    private Brick brick;
+    private Brick myBrick;
     private ArrayList<Powerup> powerList;
+    public static final int BRICK_WIDTH = 94;
+    //current power types
+        //pointspower.gif
+        //big ball
+    private String powerType;
 
     public Powerup(String filename) {
         super(filename);
-        myImageView.setFitWidth(20);
+        myImageView.setFitWidth(25);
         myImageView.setFitWidth(20);
     }
 
-    private void setY_vel(double setYVel) {
+    public void setY_vel(double setYVel) {
         this.y_vel = setYVel;
+    }
+
+    public double getY_vel() {
+        return this.y_vel;
     }
 
     public void bigPaddle(Paddle myPaddle) {
@@ -25,11 +34,23 @@ public class Powerup extends Sprite {
     }
 
     public void setBrick(Brick newBrick) {
-        this.brick = brick;
+        this.myBrick = newBrick;
     }
 
     public Brick getBrick() {
-        return this.brick;
+        return this.myBrick;
+    }
+
+    public String getPowerType() {
+        return this.powerType;
+    }
+
+    public void setPowerType(String typePower) {
+        this.powerType = typePower;
+    }
+
+    public ArrayList<Powerup> getPowerList() {
+        return this.powerList;
     }
 
     public void sizeBall(Ball myBall) {
@@ -37,20 +58,30 @@ public class Powerup extends Sprite {
         myBall.getMyImageView().setFitHeight(25);
     }
 
-    public void setPowerUps(ArrayList<Brick> myBricks) {
-        Collections.shuffle(myBricks);
-        powerList = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            Powerup currPow = new Powerup("pointspower.gif");
-            currPow.setBrick(myBricks.get(0));
-            currPow.getMyImageView().setX(currPow.getBrick().getX());
-            currPow.getMyImageView().setY(currPow.getBrick().getY());
-            currPow.getMyImageView().setVisible(false);
-
-
+    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall) {
+        if(myBricks.contains(this.getBrick()) == false) {
+            if(myBall.getSpeed() != 0) {
+                this.setY_vel(50);
+            }
+            else {
+                this.setY_vel(0);
+            }
+            this.myImageView.setVisible(true);
         }
     }
 
+    public void incrementPos(double elapsedTime) {
+        this.setY(this.getY() + this.getY_vel() * elapsedTime);
+    }
 
-
+    public void paddleCollision(Paddle myPaddle, Ball myBall) {
+        if(this.getPowerType().equals("pointspower.gif")) {
+            bigPaddle(myPaddle);
+            this.setX(1000);
+        }
+        if(this.getPowerType().equals("sizepower.gif")) {
+            sizeBall(myBall);
+            this.setX(1000);
+        }
+    }
 }

@@ -25,6 +25,7 @@ import javafx.scene.text.*;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -43,6 +44,7 @@ public class BreakerGame extends Application {
     private double brickWidth = 94;
     private double brickHeight = 40;
     private Paddle myPaddle;
+    private ArrayList<Powerup> myPowerups;
 
     private int livesLeft;
     private Text lifeCount;
@@ -65,6 +67,12 @@ public class BreakerGame extends Application {
 
     private void step(double elapsedTime) {
         updateSprites(elapsedTime);
+
+        for(Powerup i : myPowerups) {
+            i.checkBrickHit(elapsedTime, myBricks, myBall);
+            i.incrementPos(elapsedTime);
+        }
+
         levelNum.setText("Level: " + currLevel());
         scoreText.setText("Score: " + scoreNum);
         //check for loss
@@ -101,6 +109,11 @@ public class BreakerGame extends Application {
         if (isCollided(myBall, myPaddle)){
             myBall.paddleCollision(myPaddle);
         }
+        for (Powerup p : myPowerups) {
+            if(isCollided(myPaddle, p)) {
+                p.paddleCollision(myPaddle, myBall);
+            }
+        }
     }
 
     private boolean isCollided(Sprite a, Sprite b){
@@ -119,9 +132,11 @@ public class BreakerGame extends Application {
 
         if (livesLeft <= 0) str = "lost :(.";
         else str = "win :D!";
-        Label label1 = new Label("You " + str + " Press the button to play again!");
+        Label label1 = new Label("You " + str + "Your final score was: " + scoreNum + "!");
 
-        Label finalScore = new Label("Your final score was: " + scoreNum);
+
+        Label finalScore = new Label(" Press the button to play again!");
+
         scoreNum = 0;
 
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
@@ -183,6 +198,8 @@ public class BreakerGame extends Application {
 
         myBricks = generateBricks(root, width, height, "lvl1_config.txt");
 
+        myPowerups = setPowerups(this.myBricks, root);
+
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
         return stageOne;
@@ -226,8 +243,10 @@ public class BreakerGame extends Application {
         for (int num: configList){
             if (num != 0){
                 var b = new Brick("brick" + num + ".gif", width, height);
+                //Powerup currPow = new Powerup("pointspower.gif");
                 b.setPosition(currentX, currentY);
-                root.getChildren().add(b.getMyImageView());
+                //currPow.setPosition(currentX, currentY);
+                root.getChildren().addAll(b.getMyImageView());
                 brickList.add(b);
             }
             if (currentX + brickWidth >= WIDTH){
@@ -236,9 +255,28 @@ public class BreakerGame extends Application {
             }
             else currentX += brickWidth;
         }
-
-
         return brickList;
+    }
+
+    public ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
+        Collections.shuffle(myBricks);
+        ArrayList<String> typeOfPowers = new ArrayList<String>();
+        typeOfPowers.add("pointspower.gif");
+        typeOfPowers.add("sizepower.gif");
+        ArrayList<Powerup> addPowers = new ArrayList<Powerup>();
+        for(int i = 0; i < 7; i++) {
+            Collections.shuffle(typeOfPowers);
+            Powerup currPow = new Powerup(typeOfPowers.get(0));
+            currPow.setPowerType(typeOfPowers.get(0));
+            currPow.setBrick(myBricks.get(i));
+            Brick currBrick = currPow.getBrick();
+            currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
+            currPow.setY(currBrick.getY() - currPow.getMyImageView().getBoundsInLocal().getHeight() / 2 + currBrick.getMyImageView().getBoundsInLocal().getHeight()/2);
+            currPow.myImageView.setVisible(false);
+            root.getChildren().add(currPow.myImageView);
+            addPowers.add(currPow);
+        }
+        return addPowers;
     }
 
     private void handleKeyInput (KeyCode code) {
@@ -335,7 +373,6 @@ public class BreakerGame extends Application {
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
         }
-
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return stageOne;
     }
