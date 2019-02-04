@@ -103,6 +103,7 @@ public class BreakerGame extends Application {
                 myBall.brickCollision(b);
                 b.handleCollision();
                 toRemove.add(b);
+                break;
             }
         }
         myBricks.removeAll(toRemove);
@@ -308,7 +309,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(3);
+                myBall.changeSpeed(3.0);
             }
         }
 
@@ -321,6 +322,7 @@ public class BreakerGame extends Application {
         }
         //for some reason this speeds up the ball
         else if (code == KeyCode.M){
+            animation.stop();
             primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
