@@ -28,6 +28,7 @@ public class BreakerGame extends Application {
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
     public static final int WIDTH = 752;
     public static final int HEIGHT = 500;
+    private static final int LIVES_AT_START = 3;
     private Timeline animation;
     private Scene myScene;
 
@@ -132,7 +133,7 @@ public class BreakerGame extends Application {
 
         if (livesLeft <= 0) str = "lost :( ";
         else str = "win :D! ";
-        Label label1 = new Label("You " + str + "Your final score was: " + scoreNum + "!");
+        Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!");
 
 
         Label finalScore = new Label(" Press the button to play again!");
@@ -178,12 +179,11 @@ public class BreakerGame extends Application {
         stageOne = new Scene(root, width, height, background);
         // make some shapes and set their properties
 
-        livesLeft = 3;
+        livesLeft = LIVES_AT_START;
         setUpText(root);
 
         //Should we put setPosition in the constructor?
-        myBall = new Ball("ball.gif");
-
+        myBall = new Ball("ball.gif", width, height);
         var ballX = width / 2 - myBall.getWidth() / 2;
         var ballY = height - 35 - myBall.getHeight() / 2;
         myBall.setPosition(ballX, ballY);
@@ -272,8 +272,8 @@ public class BreakerGame extends Application {
             Brick currBrick = currPow.getBrick();
             currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
             currPow.setY(currBrick.getY() - currPow.getMyImageView().getBoundsInLocal().getHeight() / 2 + currBrick.getMyImageView().getBoundsInLocal().getHeight()/2);
-            currPow.myImageView.setVisible(false);
-            root.getChildren().add(currPow.myImageView);
+            currPow.getMyImageView().setVisible(false);
+            root.getChildren().add(currPow.getMyImageView());
             addPowers.add(currPow);
         }
         return addPowers;
@@ -347,7 +347,7 @@ public class BreakerGame extends Application {
     }
 
     private Scene setupForTest(int width, int height, Paint background, String testFile){
-        livesLeft = 3;
+        livesLeft = LIVES_AT_START;
         numSteps = 0;
         isTest = true;
         testType = testFile;
@@ -358,7 +358,7 @@ public class BreakerGame extends Application {
         setUpText(root);
 
         if (config.get(0) == 1) {
-            myBall = new Ball("ball.gif");
+            myBall = new Ball("ball.gif", width, height);
             myBall.setPosition(config.get(1), config.get(2));
             myBall.changeSpeedAndVelocity(config.get(3), config.get(4), config.get(5));
 

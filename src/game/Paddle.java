@@ -6,7 +6,7 @@ public class Paddle extends Sprite{
 
     public Paddle(String filename){
         super(filename);
-        myImageView.setFitWidth(PADDLE_WIDTH);
+        getMyImageView().setFitWidth(PADDLE_WIDTH);
     }
 
     public static int getSpeed() {

@@ -17,8 +17,8 @@ public class Powerup extends Sprite {
 
     public Powerup(String filename) {
         super(filename);
-        myImageView.setFitWidth(25);
-        myImageView.setFitWidth(20);
+        getMyImageView().setFitWidth(25);
+        getMyImageView().setFitWidth(20);
     }
 
     public void setY_vel(double setYVel) {
@@ -66,7 +66,7 @@ public class Powerup extends Sprite {
             else {
                 this.setY_vel(0);
             }
-            this.myImageView.setVisible(true);
+            this.getMyImageView().setVisible(true);
         }
     }
 

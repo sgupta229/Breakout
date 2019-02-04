@@ -4,16 +4,19 @@ public class Ball extends Sprite {
     private double x_dir;
     private double y_dir;
     private double ball_speed;
-    public static final int WIDTH = 750;
-    public static final int HEIGHT = 500;
+    public double sceneWidth;
+    public double sceneHeight;
 
-    public Ball(String filename){
+    public Ball(String filename, double w, double h){
         super(filename);
-        myImageView.setFitWidth(15);
-        myImageView.setFitWidth(15);
+        getMyImageView().setFitWidth(15);
+        getMyImageView().setFitWidth(15);
+        sceneWidth = w;
+        sceneHeight = h;
+
         x_dir = 100 - 200 * Math.random();
-        y_dir = 100;
-        ball_speed = 2.0;
+        y_dir = -100;
+        ball_speed = 1.5;
     }
 
     public void changeSpeed(double speed) {
@@ -39,7 +42,7 @@ public class Ball extends Sprite {
     }
 
     public void updateX_bounds() {
-        if(this.myImageView.getBoundsInParent().getMaxX() >= WIDTH || this.myImageView.getBoundsInParent().getMinX() <= 0) {
+        if(this.getMyImageView().getBoundsInParent().getMaxX() >= sceneWidth || this.getMyImageView().getBoundsInParent().getMinX() <= 0) {
             this.x_dir *= -1;
         }
     }
@@ -50,7 +53,7 @@ public class Ball extends Sprite {
         if(this.getY() <= 0) {
             this.y_dir *= -1;
         }
-        if(this.myImageView.getBoundsInParent().getMinY() >= HEIGHT) {
+        if(getMyImageView().getBoundsInParent().getMinY() >= sceneHeight) {
             reset(myPaddle);
             return true;
         }
@@ -58,9 +61,11 @@ public class Ball extends Sprite {
     }
 
     public void reset(Paddle myPaddle) {
-        setPosition(WIDTH / 2 - this.getWidth() / 2, HEIGHT - 40 - this.getHeight() / 2);
+        setPosition(sceneWidth / 2 - this.getWidth() / 2, sceneHeight - 50 - this.getHeight() / 2);
         ball_speed = 0;
-        myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
+        x_dir = 100 - 200 * Math.random();
+        y_dir = -100;
+        myPaddle.setPosition(sceneWidth / 2 - myPaddle.getWidth() / 2, sceneHeight - 25 - myPaddle.getHeight() / 2);
     }
 
     public boolean incrementPos(double elapsedTime, Paddle myPaddle) {
