@@ -14,8 +14,8 @@ public class Powerup extends Sprite {
     private ArrayList<Powerup> powerList;
     public static final int BRICK_WIDTH = 94;
     //current power types
-        //pointspower.gif
-        //big ball
+        //pointspower.gif == big paddle
+        //sizepower.gif == big ball
     private String powerType;
 
     public Powerup(String filename) {
@@ -33,7 +33,7 @@ public class Powerup extends Sprite {
     }
 
     public void bigPaddle(Paddle myPaddle) {
-        myPaddle.myImageView.setFitWidth(200);
+        myPaddle.getMyImageView().setFitWidth(200);
     }
 
     public void resetPaddleSize(Paddle myPaddle) {

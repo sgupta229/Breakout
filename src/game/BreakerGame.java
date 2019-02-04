@@ -3,30 +3,22 @@ package game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 
 public class BreakerGame extends Application {
@@ -55,6 +47,9 @@ public class BreakerGame extends Application {
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
     private boolean lostALife = false;
+    private boolean isTest = false;
+    private String testType;
+    private int numSteps;
 
     @Override
     public void start (Stage stage) {
@@ -66,6 +61,10 @@ public class BreakerGame extends Application {
     }
 
     private void step(double elapsedTime) {
+        if (isTest){
+            numSteps++;
+            checkTest(testType);
+        }
         updateSprites(elapsedTime);
 
         for(Powerup i : myPowerups) {
@@ -75,6 +74,7 @@ public class BreakerGame extends Application {
 
         levelNum.setText("Level: " + currLevel());
         scoreText.setText("Score: " + scoreNum);
+
         //check for loss
         if (lostALife){
             livesLeft -= 1;
@@ -130,10 +130,9 @@ public class BreakerGame extends Application {
 
         String str;
 
-        if (livesLeft <= 0) str = "lost :(.";
-        else str = "win :D!";
-        Label label1 = new Label("You " + str + " Your final score was " + scoreNum + "!");
-
+        if (livesLeft <= 0) str = "lost :( ";
+        else str = "win :D! ";
+        Label label1 = new Label("You " + str + "Your final score was: " + scoreNum + "!");
 
         Label finalScore = new Label("Press the button to play again!");
 
@@ -326,16 +325,16 @@ public class BreakerGame extends Application {
         }
         else if (code == KeyCode.COMMA){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "corner_bounce.txt"));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_corner_bounce.txt"));
         }
         else if (code == KeyCode.PERIOD){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "brick_destroy.txt"));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_destroy.txt"));
 
         }
         else if (code == KeyCode.SLASH){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "lose_life.txt"));
+            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
         }
     }
 
@@ -347,6 +346,10 @@ public class BreakerGame extends Application {
     }
 
     private Scene setupForTest(int width, int height, Paint background, String testFile){
+        livesLeft = 3;
+        numSteps = 0;
+        isTest = true;
+        testType = testFile;
         var config = readConfigFile(testFile);
 
         var root = new  Group();
@@ -375,6 +378,33 @@ public class BreakerGame extends Application {
         }
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return stageOne;
+    }
+
+    private void checkTest(String testType) {
+        if (testType.equals("test_corner_bounce.txt")){
+            if (myBall.getXDirection()>0 && myBall.getX() == 100 && myBall.getY() == 100){
+                Platform.exit();
+                System.out.println("Corner Bounce Test successful!");
+            }
+        }
+        else if (testType.equals("test_brick_destroy.txt")){
+            if (myBricks.size() == 1){
+                Platform.exit();
+                System.out.println("Brick Destroy Test successful!");
+            }
+        }
+        else if (testType.equals("test_lose_life.txt")){
+            if (livesLeft == 2){
+                Platform.exit();
+                System.out.println("Lose Life Test successful!");
+            }
+
+        }
+        if (numSteps > 63){
+            Platform.exit();
+            System.out.println("test failed");
+        }
+
     }
 
     private ArrayList<Integer> readConfigFile(String filename) {
