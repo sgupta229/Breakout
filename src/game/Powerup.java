@@ -2,17 +2,12 @@ package game;
 
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Timer;
+
 
 public class Powerup extends Sprite {
     private double y_vel = 0;
-    private Timer timer;
     private Brick myBrick;
-    private ArrayList<Powerup> powerList;
-    public static final int BRICK_WIDTH = 94;
     //current power types
         //pointspower.gif
         //big ball
@@ -59,10 +54,6 @@ public class Powerup extends Sprite {
 
     public void setPowerType(String typePower) {
         this.powerType = typePower;
-    }
-
-    public ArrayList<Powerup> getPowerList() {
-        return this.powerList;
     }
 
     public void sizeBall(Ball myBall) {
