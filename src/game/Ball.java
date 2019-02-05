@@ -112,16 +112,16 @@ public class Ball extends Sprite {
     }
 
     public void brickCollision(Brick brick) {
+        if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
+            this.x_dir *= -1;
+        }
         if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
             this.x_dir *= -1;
         }
-        else if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
-            this.x_dir *= -1;
-        }
-        else if((this.getY()+ this.getHeight() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
+        if((this.getY()+ this.getHeight() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
             this.y_dir *= -1;
         }
-        else if((this.getY()+ this.getHeight() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
+        if((this.getY()+ this.getHeight() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
             this.y_dir *= -1;
         }
     }
