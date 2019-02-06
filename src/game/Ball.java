@@ -6,6 +6,8 @@ public class Ball extends Sprite {
     private double ball_speed;
     public double sceneWidth;
     public double sceneHeight;
+    public static final int WIDTH = 752;
+    public static final int HEIGHT = 500;
 
     public Ball(String filename, double w, double h){
         super(filename);

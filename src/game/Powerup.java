@@ -15,8 +15,8 @@ public class Powerup extends Sprite {
 
     public Powerup(String filename) {
         super(filename);
-        myImageView.setFitWidth(20);
-        myImageView.setFitHeight(20);
+        getMyImageView().setFitWidth(20);
+        getMyImageView().setFitHeight(20);
     }
 
     public void setY_vel(double setYVel) {
@@ -32,7 +32,7 @@ public class Powerup extends Sprite {
     }
 
     public void resetPaddleSize(Paddle myPaddle) {
-        myPaddle.myImageView.setFitWidth(175);
+        myPaddle.getMyImageView().setFitWidth(175);
     }
 
     public void resetBallSize(Ball myBall) {
