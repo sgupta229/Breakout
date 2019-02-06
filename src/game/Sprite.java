@@ -5,8 +5,7 @@ import javafx.scene.image.ImageView;
 
 public abstract class Sprite {
 
-    protected ImageView myImageView;
-
+    private ImageView myImageView;
 
     public Sprite(String filename){
         var image = new Image(this.getClass().getClassLoader().getResourceAsStream(filename));

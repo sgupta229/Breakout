@@ -7,8 +7,8 @@ public class Brick extends Sprite{
         super(filename);
         typeNumber = Integer.parseInt(filename.substring(5, 6));
         //In reality we should use the dimensions of the scene to determine the width
-        myImageView.setFitWidth(sceneWidth / 8);
-        myImageView.setFitHeight(myImageView.getBoundsInLocal().getHeight()*2);
+        getMyImageView().setFitWidth(sceneWidth / 8);
+        getMyImageView().setFitHeight(getMyImageView().getBoundsInLocal().getHeight()*2);
     }
 
     public int getBrickType(){

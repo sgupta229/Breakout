@@ -69,7 +69,7 @@ public class Powerup extends Sprite {
             else {
                 this.setY_vel(0);
             }
-            this.myImageView.setVisible(true);
+            this.getMyImageView().setVisible(true);
         }
     }
 
