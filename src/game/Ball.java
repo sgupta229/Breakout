@@ -15,7 +15,7 @@ public class Ball extends Sprite {
         sceneHeight = h;
 
         x_dir = 100 - 200 * Math.random();
-        y_dir = 100;
+        y_dir = -100;
         ball_speed = 0;
     }
 
@@ -61,9 +61,9 @@ public class Ball extends Sprite {
     }
 
     public void reset(Paddle myPaddle) {
-        setPosition(WIDTH / 2 - this.getWidth() / 2, HEIGHT - 40 - this.getHeight() / 2);
+        setPosition(sceneWidth / 2 - this.getWidth() / 2, sceneHeight - 40 - this.getHeight() / 2);
         this.ball_speed = 0;
-        myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
+        myPaddle.setPosition(sceneWidth / 2 - myPaddle.getWidth() / 2, sceneHeight - 25 - myPaddle.getHeight() / 2);
     }
 
     public boolean incrementPos(double elapsedTime, Paddle myPaddle) {
