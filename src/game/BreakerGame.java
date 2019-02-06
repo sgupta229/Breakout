@@ -4,10 +4,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Scene;
@@ -51,6 +54,7 @@ public class BreakerGame extends Application {
     private boolean isTest = false;
     private String testType;
     private int numSteps;
+    private double mouseX;
 
     @Override
     public void start (Stage stage) {
@@ -61,64 +65,51 @@ public class BreakerGame extends Application {
         primaryStage.show();
     }
 
-    private void step(double elapsedTime) {
-        if (isTest){
-            numSteps++;
-            checkTest(testType);
-        }
-        updateSprites(elapsedTime);
+    private Scene setupGame (int width, int height, Paint background) {
 
-        for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall);
-            i.incrementPos(elapsedTime);
-        }
+        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+        animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
 
-        levelNum.setText("Level: " + currLevel());
-        scoreText.setText("Score: " + scoreNum);
+        var root = new  Group();
+        // create one top level collection to organize the things in the scene
+        // create a place to see the shapes
+        stageOne = new Scene(root, width, height, background);
+        // make some shapes and set their properties
 
-        //check for loss
-        if (lostALife){
-            livesLeft -= 1;
-            lifeCount.setText("Lives: " + livesLeft);
-            if (livesLeft <= 0){
-                primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+        //adapted from https://stackoverflow.com/questions/18597939/handle-mouse-event-anywhere-with-javafx
+        stageOne.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent event) {
+                mouseX = event.getSceneX();
             }
-        }
-        //check for win
-        if (myBricks.isEmpty()){
-            primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
-        }
-        checkAndHandleCollisions();
-    }
+        });
 
+        livesLeft = LIVES_AT_START;
+        setUpText(root);
 
-    private void updateSprites(double elapsedTime) {
-        lostALife = myBall.incrementPos(elapsedTime, myPaddle);
-    }
+        //Should we put setPosition in the constructor?
+        myBall = new Ball("ball.gif", width, height);
+        var ballX = width / 2 - myBall.getWidth() / 2;
+        var ballY = height - 35 - myBall.getHeight() / 2;
+        myBall.setPosition(ballX, ballY);
 
-    private void checkAndHandleCollisions() {
-        var toRemove = new ArrayList();
-        for (Brick b: myBricks) {
-            if (isCollided(myBall, b)) {
-                scoreNum += b.getBrickType();
-                myBall.brickCollision(b);
-                b.handleCollision();
-                toRemove.add(b);
-            }
-        }
-        myBricks.removeAll(toRemove);
-        if (isCollided(myBall, myPaddle)){
-            myBall.paddleCollision(myPaddle);
-        }
-        for (Powerup p : myPowerups) {
-            if(isCollided(myPaddle, p)) {
-                p.paddleCollision(myPaddle, myBall);
-            }
-        }
-    }
+        myPaddle = new Paddle("paddle.gif");
+        var paddleX = width / 2 - myPaddle.getWidth() / 2;
+        var paddleY = height - 25 - myPaddle.getHeight() / 2;
+        myPaddle.setPosition(paddleX, paddleY);
 
-    private boolean isCollided(Sprite a, Sprite b){
-        return a.getMyImageView().getBoundsInParent().intersects(b.getMyImageView().getBoundsInParent());
+        root.getChildren().add(myBall.getMyImageView());
+        root.getChildren().add(myPaddle.getMyImageView());
+
+        myBricks = generateBricks(root, width, height, "lvl1_config.txt");
+
+        myPowerups = setPowerups(this.myBricks, root);
+
+        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+
+        return stageOne;
     }
 
     //We should try to combine this and Splash screen somehow
@@ -165,44 +156,70 @@ public class BreakerGame extends Application {
     }
 
 
-    private Scene setupGame (int width, int height, Paint background) {
+    private void step(double elapsedTime) {
+        if (isTest){
+            numSteps++;
+            checkTest(testType);
+        }
+        updateSprites(elapsedTime);
+        mouseHandle();
 
-        var frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
+        for(Powerup i : myPowerups) {
+            i.checkBrickHit(elapsedTime, myBricks, myBall);
+            i.incrementPos(elapsedTime);
+        }
 
-        var root = new  Group();
-        // create one top level collection to organize the things in the scene
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
+        levelNum.setText("Level: " + currLevel());
+        scoreText.setText("Score: " + scoreNum);
 
-        livesLeft = LIVES_AT_START;
-        setUpText(root);
+        //check for loss
+        if (lostALife){
+            livesLeft -= 1;
+            lifeCount.setText("Lives: " + livesLeft);
+            if (livesLeft <= 0){
+                primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+            }
+        }
+        //check for win
+        if (myBricks.isEmpty()){
+            primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+        }
+        checkAndHandleCollisions();
+    }
 
-        //Should we put setPosition in the constructor?
-        myBall = new Ball("ball.gif", width, height);
-        var ballX = width / 2 - myBall.getWidth() / 2;
-        var ballY = height - 35 - myBall.getHeight() / 2;
-        myBall.setPosition(ballX, ballY);
+    private void mouseHandle(){
+        if (mouseX < 0) mouseX = 0;
+        else if (mouseX + myPaddle.getWidth() >= WIDTH) mouseX = WIDTH - myPaddle.getWidth();
+        myPaddle.setX(mouseX);
+    }
 
-        myPaddle = new Paddle("paddle.gif");
-        var paddleX = width / 2 - myPaddle.getWidth() / 2;
-        var paddleY = height - 25 - myPaddle.getHeight() / 2;
-        myPaddle.setPosition(paddleX, paddleY);
+    private void updateSprites(double elapsedTime) {
+        lostALife = myBall.incrementPos(elapsedTime, myPaddle);
+    }
 
-        root.getChildren().add(myBall.getMyImageView());
-        root.getChildren().add(myPaddle.getMyImageView());
+    private void checkAndHandleCollisions() {
+        var toRemove = new ArrayList();
+        for (Brick b: myBricks) {
+            if (isCollided(myBall, b)) {
+                scoreNum += b.getBrickType();
+                myBall.brickCollision(b);
+                b.handleCollision();
+                toRemove.add(b);
+            }
+        }
+        myBricks.removeAll(toRemove);
+        if (isCollided(myBall, myPaddle)){
+            myBall.paddleCollision(myPaddle);
+        }
+        for (Powerup p : myPowerups) {
+            if(isCollided(myPaddle, p)) {
+                p.paddleCollision(myPaddle, myBall);
+            }
+        }
+    }
 
-        myBricks = generateBricks(root, width, height, "lvl1_config.txt");
-
-        myPowerups = setPowerups(this.myBricks, root);
-
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-
-        return stageOne;
+    private boolean isCollided(Sprite a, Sprite b){
+        return a.getMyImageView().getBoundsInParent().intersects(b.getMyImageView().getBoundsInParent());
     }
 
     private int currLevel() {
@@ -258,7 +275,7 @@ public class BreakerGame extends Application {
         return brickList;
     }
 
-    public ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
+    private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
         Collections.shuffle(myBricks);
         ArrayList<String> typeOfPowers = new ArrayList<String>();
         typeOfPowers.add("pointspower.gif");
@@ -281,20 +298,20 @@ public class BreakerGame extends Application {
 
     private void handleKeyInput (KeyCode code) {
 
-        //paddle controls
-        int paddleSpeed = myPaddle.getSpeed();
-        if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
-            if(myBall.getSpeed() != 0) {
-                myPaddle.setX(myPaddle.getX() + paddleSpeed);
-            }
-        }
-        else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
-            if(myBall.getSpeed() != 0) {
-                myPaddle.setX(myPaddle.getX() - paddleSpeed);
-            }
-        }
+        //paddle controls, not need since implementation of mouseHandler()
+//        int paddleSpeed = myPaddle.getSpeed();
+//        if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
+//            if(myBall.getSpeed() != 0) {
+//                myPaddle.setX(myPaddle.getX() + paddleSpeed);
+//            }
+//        }
+//        else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
+//            if(myBall.getSpeed() != 0) {
+//                myPaddle.setX(myPaddle.getX() - paddleSpeed);
+//            }
+//        }
         //make ball go faster
-        else if (code == KeyCode.F) {
+        if (code == KeyCode.F) {
             myBall.changeSpeed(myBall.getSpeed() + 1);
         }
         //make ball go slower
