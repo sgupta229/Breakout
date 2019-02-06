@@ -15,8 +15,8 @@ public class Ball extends Sprite {
         sceneHeight = h;
 
         x_dir = 100 - 200 * Math.random();
-        y_dir = -100;
-        ball_speed = 1.5;
+        y_dir = 100;
+        ball_speed = 0;
     }
 
     public void changeSpeed(double speed) {
@@ -61,11 +61,9 @@ public class Ball extends Sprite {
     }
 
     public void reset(Paddle myPaddle) {
-        setPosition(sceneWidth / 2 - this.getWidth() / 2, sceneHeight - 50 - this.getHeight() / 2);
-        ball_speed = 0;
-        x_dir = 100 - 200 * Math.random();
-        y_dir = -100;
-        myPaddle.setPosition(sceneWidth / 2 - myPaddle.getWidth() / 2, sceneHeight - 25 - myPaddle.getHeight() / 2);
+        setPosition(WIDTH / 2 - this.getWidth() / 2, HEIGHT - 40 - this.getHeight() / 2);
+        this.ball_speed = 0;
+        myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
     }
 
     public boolean incrementPos(double elapsedTime, Paddle myPaddle) {
@@ -117,16 +115,16 @@ public class Ball extends Sprite {
     }
 
     public void brickCollision(Brick brick) {
+        if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
+            this.x_dir *= -1;
+        }
         if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
             this.x_dir *= -1;
         }
-        else if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
-            this.x_dir *= -1;
-        }
-        else if((this.getY()+ this.getHeight() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
+        if((this.getY()+ this.getHeight() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
             this.y_dir *= -1;
         }
-        else if((this.getY()+ this.getHeight() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
+        if((this.getY()+ this.getHeight() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
             this.y_dir *= -1;
         }
     }

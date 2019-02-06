@@ -126,8 +126,7 @@ public class BreakerGame extends Application {
         else str = "win :D! ";
         Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!");
 
-
-        Label finalScore = new Label(" Press the button to play again!");
+        Label finalScore = new Label("Press the button to play again!");
 
         scoreNum = 0;
 
@@ -326,7 +325,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(3);
+                myBall.changeSpeed(3.0);
             }
         }
 
@@ -339,6 +338,7 @@ public class BreakerGame extends Application {
         }
         //for some reason this speeds up the ball
         else if (code == KeyCode.M){
+            animation.stop();
             primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
