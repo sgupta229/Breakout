@@ -144,13 +144,18 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label label1 = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives! Use 'SPACE' \nto freeze the ball" +
-                ", 'F' to speed the ball up, and 'S' to slow the ball down.");
-        label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        Label gameIntro = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
+        Label instructions = new Label("Use the mouse to control the paddle. The paddle will not move if the mouse is outside of the window.");
+        Label cheatCodes  = new Label("Here are some cheat codes: SPACE - pause, R - reset ball and paddle, M - reset game, F - faster ball, S - slower ball");
+        gameIntro.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        instructions.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        instructions.setStyle("-fx-border-color:red; -fx-padding:3px;");
+        cheatCodes.setFont(Font.font("Amble CN", FontWeight.BOLD, 12.5));
+        cheatCodes.setStyle("-fx-border-color:green; -fx-padding:3px;");
         Button startButton = new Button("Start Game");
         startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
 
-        vb.getChildren().addAll(label1, startButton);
+        vb.getChildren().addAll(gameIntro, instructions, cheatCodes, startButton);
         return splashScene;
     }
 
@@ -349,7 +354,7 @@ public class BreakerGame extends Application {
         //for some reason this speeds up the ball
         else if (code == KeyCode.M){
             animation.stop();
-            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
+            primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
             setupForTestScene();
