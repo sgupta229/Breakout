@@ -3,7 +3,7 @@ package game;
 public class Brick extends Sprite{
     private int typeNumber;
 
-    public Brick(String filename, double sceneWidth, double sceneHeight) {
+    public Brick(String filename, double sceneWidth) {
         super(filename);
         typeNumber = Integer.parseInt(filename.substring(5, 6));
         getMyImageView().setFitWidth(sceneWidth / 10);
