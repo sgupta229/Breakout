@@ -15,7 +15,6 @@ public class Ball extends Sprite {
         getMyImageView().setFitWidth(15);
         sceneWidth = w;
         sceneHeight = h;
-
         x_dir = 100 - 200 * Math.random();
         y_dir = -100;
         ball_speed = 0;
@@ -49,17 +48,19 @@ public class Ball extends Sprite {
         }
     }
 
-
-
-    public boolean updateY_bounds(Paddle myPaddle) {
-        if(this.getY() <= 0) {
-            this.y_dir *= -1;
-        }
+    public boolean checkMissedBall(Paddle myPaddle) {
         if(getMyImageView().getBoundsInParent().getMinY() >= sceneHeight) {
             reset(myPaddle);
             return true;
         }
         return false;
+    }
+
+
+    public void updateY_bounds() {
+        if(this.getY() <= 0) {
+            this.y_dir *= -1;
+        }
     }
 
     public void reset(Paddle myPaddle) {
@@ -68,11 +69,11 @@ public class Ball extends Sprite {
         myPaddle.setPosition(sceneWidth / 2 - myPaddle.getWidth() / 2, sceneHeight - 25 - myPaddle.getHeight() / 2);
     }
 
-    public boolean incrementPos(double elapsedTime, Paddle myPaddle) {
+    public void incrementPos(double elapsedTime, Paddle myPaddle) {
         setPosition(this.getX() + x_dir * this.ball_speed * elapsedTime,
                 this.getY() + y_dir * this.ball_speed * elapsedTime);
         updateX_bounds();
-        return updateY_bounds(myPaddle);
+        updateY_bounds();
     }
 
     //ALTER SPEED TO ACCOUNT FOR DIFFERENCE
@@ -120,13 +121,13 @@ public class Ball extends Sprite {
         if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
             this.x_dir *= -1;
         }
-        else if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
+        if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
             this.x_dir *= -1;
         }
-        else if((this.getY()+ this.getHeight() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
+        if((this.getY()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
             this.y_dir *= -1;
         }
-        else if((this.getY()+ this.getHeight() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
+        if((this.getY()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
             this.y_dir *= -1;
         }
     }
