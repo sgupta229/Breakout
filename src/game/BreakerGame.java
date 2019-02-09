@@ -29,7 +29,7 @@ public class BreakerGame extends Application {
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
-    public static final int WIDTH = 752;
+    public static final int WIDTH = 750;
     public static final int HEIGHT = 500;
     private static final int LIVES_AT_START = 3;
     private Timeline animation;
@@ -39,8 +39,8 @@ public class BreakerGame extends Application {
     //THIS BALL IS FOR THE POWERUP
     private Ball secondBall;
     private ArrayList<Brick> myBricks;
-    private double brickWidth = 94;
-    private double brickHeight = 40;
+    private double brickWidth;
+    private double brickHeight;
     private Paddle myPaddle;
     private ArrayList<Powerup> myPowerups;
 
@@ -157,7 +157,7 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height, "lvl1_config.txt");
+        myBricks = generateBricks(root, width, height, "lvl3_config.txt");
 
         myPowerups = setPowerups(this.myBricks, root);
 
@@ -287,11 +287,15 @@ public class BreakerGame extends Application {
     private ArrayList<Brick> generateBricks(Group root, double width, double height, String lvlConfigFile) {
         var brickList = new ArrayList<Brick>();
         var configList = readConfigFile(lvlConfigFile);
+
+        var b = new Brick("brick1.gif", width, height);
+        brickWidth = b.getWidth();
+        brickHeight = b.getHeight();
         double currentX = 0;
-        double currentY = 0;
+        double currentY = brickHeight;
         for (int num: configList){
             if (num != 0){
-                var b = new Brick("brick" + num + ".gif", width, height);
+                b = new Brick("brick" + num + ".gif", width, height);
                 //Powerup currPow = new Powerup("pointspower.gif");
                 b.setPosition(currentX, currentY);
                 //currPow.setPosition(currentX, currentY);
@@ -353,7 +357,7 @@ public class BreakerGame extends Application {
         }
         //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 4.0) {
+            if (myBall.getSpeed() >= 1.0) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
