@@ -44,9 +44,9 @@ public abstract class Powerup extends Sprite {
         this.powerType = typePower;
     }
 
-    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall) {
+    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall, Ball secondBall) {
         if(myBricks.contains(this.getBrick()) == false) {
-            if(myBall.getSpeed() != 0) {
+            if(myBall.getSpeed() != 0 || secondBall.getSpeed() != 0) {
                 this.setY_vel(50);
             }
             else {
@@ -60,22 +60,6 @@ public abstract class Powerup extends Sprite {
         this.setY(this.getY() + this.getY_vel() * elapsedTime);
     }
 
-//    public void paddleCollision(Paddle myPaddle, Ball myBall) {
-////        if(this.getPowerType().equals("pointspower.gif")) {
-////            bigPaddle(myPaddle);
-////            this.setX(1000);
-////            PauseTransition delay = new PauseTransition(Duration.seconds(5));
-////            delay.setOnFinished(event -> resetPaddleSize(myPaddle));
-////            delay.play();
-////        }
-////        if(this.getPowerType().equals("sizepower.gif")) {
-////            sizeBall(myBall);
-////            this.setX(1000);
-////            PauseTransition delay = new PauseTransition(Duration.seconds(3));
-////            delay.setOnFinished( event -> resetBallSize(myBall));
-////            delay.play();
-////        }
-////    }
 
     public abstract void paddleCollision(Paddle myPaddle, Ball ball, Ball secondBall);
 }

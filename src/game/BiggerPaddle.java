@@ -22,7 +22,7 @@ public class BiggerPaddle extends Powerup {
         if(this.getPowerType().equals("pointspower.gif")) {
             bigPaddle(myPaddle);
             this.setX(1000);
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+            PauseTransition delay = new PauseTransition(Duration.seconds(10));
             delay.setOnFinished(event -> resetPaddleSize(myPaddle));
             delay.play();
         }

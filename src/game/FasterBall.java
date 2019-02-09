@@ -10,11 +10,11 @@ public class FasterBall extends Powerup {
     }
 
     public void resetBallSpeed(Ball myBall) {
-        myBall.changeSpeed(3.0);
+        myBall.changeSpeed(2.75);
     }
 
     public void fastBall(Ball myBall) {
-        myBall.changeSpeed(4.5);
+        myBall.changeSpeed(4.0);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class FasterBall extends Powerup {
         if(this.getPowerType().equals("sizepower.gif")) {
             fastBall(myBall);
             this.setX(1000);
-            PauseTransition delay = new PauseTransition(Duration.seconds(5));
+            PauseTransition delay = new PauseTransition(Duration.seconds(10));
             delay.setOnFinished(event -> resetBallSpeed(myBall));
             delay.play();
         }

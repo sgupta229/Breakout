@@ -20,6 +20,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -44,11 +48,14 @@ public class BreakerGame extends Application {
     private Paddle myPaddle;
     private ArrayList<Powerup> myPowerups;
 
+    private HighScoreUpdater highScoreUpdater = new HighScoreUpdater();
     private int livesLeft;
     private Text lifeCount;
     private Text levelNum = new Text();
     private Text scoreText = new Text();
     private int scoreNum;
+    private Text highScoreText = new Text();
+    private Text highScoreNum;
 
     private Scene splashScene, stageOne, stageTwo, stageThree;
     private Stage primaryStage;
@@ -59,6 +66,8 @@ public class BreakerGame extends Application {
     private double mouseX;
     private int currentLevel = 1;
     private int bricksLeft;
+
+
 
     @Override
     public void start (Stage stage) {
@@ -74,7 +83,7 @@ public class BreakerGame extends Application {
         vb.setAlignment(Pos.CENTER);
         splashScene = new Scene(vb, width, height, background);
 
-        Label gameIntro = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
+        Label gameIntro = new Label("Welcome to Breakout! Click 'Start Game' and then press SPACE to start playing!");
         Label instructions = new Label("Use the mouse to control the paddle. The paddle will not move if the mouse is outside of the window.");
         Label cheatCodes  = new Label("Here are some cheat codes: SPACE - pause, R - reset ball and paddle, M - reset game, F - faster ball, S - slower ball");
         gameIntro.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
@@ -105,6 +114,9 @@ public class BreakerGame extends Application {
 
         Label finalScore = new Label("Press the button to play again!");
 
+        highScoreUpdater.setCurrentScore(scoreNum);
+        highScoreUpdater.addNewScoreToFile();
+
         scoreNum = 0;
 
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
@@ -113,6 +125,7 @@ public class BreakerGame extends Application {
         startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
 
         vb.getChildren().addAll(label1, finalScore, startButton);
+
         return scene;
     }
 
@@ -165,6 +178,8 @@ public class BreakerGame extends Application {
 
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
+        highScoreUpdater.updateHighScore();
+
         return stageOne;
     }
 
@@ -178,12 +193,13 @@ public class BreakerGame extends Application {
         mouseHandle();
 
         for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall);
+            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
             i.incrementPos(elapsedTime);
         }
 
         levelNum.setText("Level: " + currentLevel);
         scoreText.setText("Score: " + scoreNum);
+        highScoreText.setText("High Score: " + highScoreUpdater.getHighscore());
 
         //check for loss
         if (lostALife){
@@ -276,11 +292,15 @@ public class BreakerGame extends Application {
         levelNum.setY(15);
         levelNum.setFill(Color.GREEN);
         levelNum.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        scoreText.setX(675);
+        scoreText.setX(677);
         scoreText.setY(15);
         scoreText.setFill(Color.BLUEVIOLET);
         scoreText.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        root.getChildren().addAll(lifeCount, levelNum, scoreText);
+        highScoreText.setX(643);
+        highScoreText.setY(30);
+        highScoreText.setFill(Color.DARKSALMON);
+        highScoreText.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
+        root.getChildren().addAll(lifeCount, levelNum, scoreText, highScoreText);
     }
 
     private ArrayList<Brick> generateBricks(Group root, double width, double height, String lvlConfigFile) {
@@ -312,18 +332,25 @@ public class BreakerGame extends Application {
 
     private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
         Collections.shuffle(myBricks);
+        ArrayList<Brick> brickTens = new ArrayList<>();
+        for(Brick i : myBricks) {
+            if(i.getBrickType() == 7) {
+                brickTens.add(i);
+            }
+        }
+
         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
-            typeOfPowers.add(new FasterBall("sizepower.gif"));
+        typeOfPowers.add(new FasterBall("sizepower.gif"));
+        typeOfPowers.add(new DoubleBall("extraballpower.gif"));
+        for(int i = 0; i < 2; i++) {
             typeOfPowers.add(new BiggerPaddle("pointspower.gif"));
-            typeOfPowers.add(new DoubleBall("extraballpower.gif"));
         }
         ArrayList<Powerup> addPowers = new ArrayList<>();
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < 4; i++) {
             Collections.shuffle(typeOfPowers);
             Powerup currPow = typeOfPowers.get(0);
             typeOfPowers.remove(0);
-            currPow.setBrick(myBricks.get(i));
+            currPow.setBrick(brickTens.get(i));
             Brick currBrick = currPow.getBrick();
             currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
             currPow.setY(currBrick.getY() - currPow.getMyImageView().getBoundsInLocal().getHeight() / 2 + currBrick.getMyImageView().getBoundsInLocal().getHeight()/2);
@@ -369,9 +396,9 @@ public class BreakerGame extends Application {
                 }
             }
             else {
-                myBall.changeSpeed(3.0);
+                myBall.changeSpeed(2.75);
                 if(secondBall.getMyImageView().isVisible() == true) {
-                    secondBall.changeSpeed(3.0);
+                    secondBall.changeSpeed(2.75);
                 }
             }
         }
@@ -386,6 +413,7 @@ public class BreakerGame extends Application {
         //for some reason this speeds up the ball
         else if (code == KeyCode.M){
             animation.stop();
+            scoreNum = 0;
             primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
