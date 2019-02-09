@@ -176,7 +176,7 @@ public class BreakerGame extends Application {
         mouseHandle();
 
         for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall);
+            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
             i.incrementPos(elapsedTime);
         }
 
