@@ -187,13 +187,13 @@ public class BreakerGame extends Application {
     }
 
     private void mouseHandle(){
-        if (mouseX < 0) {
+        if (mouseX - myPaddle.getWidth() / 2 <= 0) {
             mouseX = myPaddle.getWidth() / 2;
         }
         else if(myBall.getSpeed() == 0) {
             myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
         }
-        else if (mouseX + myPaddle.getWidth() >= WIDTH) {
+        else if (mouseX + myPaddle.getWidth() / 2 >= WIDTH) {
             mouseX = WIDTH + myPaddle.getWidth() / 2;
         }
         else {
