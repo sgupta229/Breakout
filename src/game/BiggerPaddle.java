@@ -7,7 +7,6 @@ public class BiggerPaddle extends Powerup {
 
     public BiggerPaddle(String filename) {
         super(filename);
-        this.setPowerType("pointspower.gif");
     }
 
     public void bigPaddle(Paddle myPaddle) {
@@ -19,7 +18,7 @@ public class BiggerPaddle extends Powerup {
     }
 
     @Override
-    public void paddleCollision(Paddle myPaddle, Ball myBall) {
+    public void paddleCollision(Paddle myPaddle, Ball myBall, Ball secondBall) {
         if(this.getPowerType().equals("pointspower.gif")) {
             bigPaddle(myPaddle);
             this.setX(1000);

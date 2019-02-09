@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class BreakerGame extends Application {
-    private static final int FRAMES_PER_SECOND = 120;
-    private static final int MILLISECOND_DELAY = 600 / FRAMES_PER_SECOND;
+    private static final int FRAMES_PER_SECOND = 60;
+    private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
     public static final int WIDTH = 752;
@@ -36,6 +36,8 @@ public class BreakerGame extends Application {
     private Scene myScene;
 
     private Ball myBall;
+    //THIS BALL IS FOR THE POWERUP
+    private Ball secondBall;
     private ArrayList<Brick> myBricks;
     private double brickWidth = 94;
     private double brickHeight = 40;
@@ -63,6 +65,53 @@ public class BreakerGame extends Application {
         primaryStage.setScene(myScene);
         primaryStage.setTitle("Breakout Game by Team 17");
         primaryStage.show();
+    }
+
+    private Scene setupSplashScreen (int width, int height, Paint background) {
+        VBox vb = new VBox(20);
+        vb.setAlignment(Pos.CENTER);
+        splashScene = new Scene(vb, width, height, background);
+
+        Label gameIntro = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
+        Label instructions = new Label("Use the mouse to control the paddle. The paddle will not move if the mouse is outside of the window.");
+        Label cheatCodes  = new Label("Here are some cheat codes: SPACE - pause, R - reset ball and paddle, M - reset game, F - faster ball, S - slower ball");
+        gameIntro.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        instructions.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        instructions.setStyle("-fx-border-color:red; -fx-padding:3px;");
+        cheatCodes.setFont(Font.font("Amble CN", FontWeight.BOLD, 12.5));
+        cheatCodes.setStyle("-fx-border-color:green; -fx-padding:3px;");
+        Button startButton = new Button("Start Game");
+        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
+
+        vb.getChildren().addAll(gameIntro, instructions, cheatCodes, startButton);
+        return splashScene;
+    }
+
+    //We should try to combine this and Splash screen somehow
+    private Scene setupResetScreen(int width, int height, Paint background) {
+        animation.stop();
+
+        VBox vb = new VBox(20);
+        vb.setAlignment(Pos.CENTER);
+        var scene = new Scene(vb, width, height, background);
+
+        String str;
+
+        if (livesLeft <= 0) str = "lost :( ";
+        else str = "win :D! ";
+        Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!");
+
+        Label finalScore = new Label("Press the button to play again!");
+
+        scoreNum = 0;
+
+        label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
+        Button startButton = new Button("Play Again");
+        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
+
+        vb.getChildren().addAll(label1, finalScore, startButton);
+        return scene;
     }
 
     private Scene setupGame (int width, int height, Paint background) {
@@ -95,12 +144,17 @@ public class BreakerGame extends Application {
         var ballY = height - 35 - myBall.getHeight() / 2;
         myBall.setPosition(ballX, ballY);
 
+        secondBall = new Ball("ball.gif", width, height);
+        secondBall.setPosition(1000, 1000);
+        secondBall.getMyImageView().setVisible(false);
+
         myPaddle = new Paddle("paddle.gif");
         var paddleX = width / 2 - myPaddle.getWidth() / 2;
         var paddleY = height - 25 - myPaddle.getHeight() / 2;
         myPaddle.setPosition(paddleX, paddleY);
 
         root.getChildren().add(myBall.getMyImageView());
+        root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
         myBricks = generateBricks(root, width, height, "lvl1_config.txt");
@@ -110,53 +164,6 @@ public class BreakerGame extends Application {
         stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
         return stageOne;
-    }
-
-    //We should try to combine this and Splash screen somehow
-    private Scene setupResetScreen(int width, int height, Paint background) {
-        animation.stop();
-
-        VBox vb = new VBox(20);
-        vb.setAlignment(Pos.CENTER);
-        var scene = new Scene(vb, width, height, background);
-
-        String str;
-
-        if (livesLeft <= 0) str = "lost :( ";
-        else str = "win :D! ";
-        Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!");
-
-        Label finalScore = new Label("Press the button to play again!");
-
-        scoreNum = 0;
-
-        label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
-        finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
-        Button startButton = new Button("Play Again");
-        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
-
-        vb.getChildren().addAll(label1, finalScore, startButton);
-        return scene;
-    }
-
-    private Scene setupSplashScreen (int width, int height, Paint background) {
-        VBox vb = new VBox(20);
-        vb.setAlignment(Pos.CENTER);
-        splashScene = new Scene(vb, width, height, background);
-
-        Label gameIntro = new Label("Welcome to Breakout! Try to break all the bricks before losing all your lives!");
-        Label instructions = new Label("Use the mouse to control the paddle. The paddle will not move if the mouse is outside of the window.");
-        Label cheatCodes  = new Label("Here are some cheat codes: SPACE - pause, R - reset ball and paddle, M - reset game, F - faster ball, S - slower ball");
-        gameIntro.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
-        instructions.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
-        instructions.setStyle("-fx-border-color:red; -fx-padding:3px;");
-        cheatCodes.setFont(Font.font("Amble CN", FontWeight.BOLD, 12.5));
-        cheatCodes.setStyle("-fx-border-color:green; -fx-padding:3px;");
-        Button startButton = new Button("Start Game");
-        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
-
-        vb.getChildren().addAll(gameIntro, instructions, cheatCodes, startButton);
-        return splashScene;
     }
 
 
@@ -208,7 +215,9 @@ public class BreakerGame extends Application {
     }
 
     private void updateSprites(double elapsedTime) {
-        lostALife = myBall.incrementPos(elapsedTime, myPaddle);
+        lostALife = myBall.checkMissedBall(myPaddle);
+        myBall.incrementPos(elapsedTime, myPaddle);
+        secondBall.incrementPos(elapsedTime, myPaddle);
     }
 
     private void checkAndHandleCollisions() {
@@ -220,14 +229,23 @@ public class BreakerGame extends Application {
                 b.handleCollision();
                 toRemove.add(b);
             }
+            if (isCollided(secondBall, b)) {
+                secondBall.brickCollision(b);
+                scoreNum += b.getBrickType();
+                b.handleCollision();
+                toRemove.add(b);
+            }
         }
         myBricks.removeAll(toRemove);
         if (isCollided(myBall, myPaddle)){
             myBall.paddleCollision(myPaddle);
         }
+        if (isCollided(secondBall, myPaddle)) {
+            secondBall.paddleCollision(myPaddle);
+        }
         for (Powerup p : myPowerups) {
             if(isCollided(myPaddle, p)) {
-                p.paddleCollision(myPaddle, myBall);
+                p.paddleCollision(myPaddle, myBall, secondBall);
             }
         }
     }
@@ -293,8 +311,9 @@ public class BreakerGame extends Application {
         Collections.shuffle(myBricks);
         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
-            typeOfPowers.add(new BiggerBall("sizepower.gif"));
+            typeOfPowers.add(new FasterBall("sizepower.gif"));
             typeOfPowers.add(new BiggerPaddle("pointspower.gif"));
+            typeOfPowers.add(new DoubleBall("extraballpower.gif"));
         }
         ArrayList<Powerup> addPowers = new ArrayList<>();
         for(int i = 0; i < 6; i++) {
@@ -328,11 +347,13 @@ public class BreakerGame extends Application {
 //        }
         //make ball go faster
         if (code == KeyCode.F) {
-            myBall.changeSpeed(myBall.getSpeed() + 1);
+            if(myBall.getSpeed() != 0) {
+                myBall.changeSpeed(myBall.getSpeed() + 1);
+            }
         }
         //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 3.5) {
+            if (myBall.getSpeed() >= 4.0) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
@@ -340,9 +361,15 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
+                if(secondBall.getMyImageView().isVisible() == true) {
+                    secondBall.changeSpeed(0);
+                }
             }
             else {
-                myBall.changeSpeed(2.5);
+                myBall.changeSpeed(3.0);
+                if(secondBall.getMyImageView().isVisible() == true) {
+                    secondBall.changeSpeed(3.0);
+                }
             }
         }
 

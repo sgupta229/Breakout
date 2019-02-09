@@ -17,6 +17,7 @@ public abstract class Powerup extends Sprite {
         super(filename);
         getMyImageView().setFitWidth(20);
         getMyImageView().setFitHeight(20);
+        this.setPowerType(filename);
     }
 
     public void setY_vel(double setYVel) {
@@ -76,5 +77,5 @@ public abstract class Powerup extends Sprite {
 ////        }
 ////    }
 
-    public abstract void paddleCollision(Paddle myPaddle, Ball myBall);
+    public abstract void paddleCollision(Paddle myPaddle, Ball ball, Ball secondBall);
 }
