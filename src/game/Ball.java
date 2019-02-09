@@ -123,13 +123,13 @@ public class Ball extends Sprite {
         if((this.getX()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMinX()) {
             this.x_dir *= -1;
         }
-        if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
+        else if((this.getX()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMaxX()) {
             this.x_dir *= -1;
         }
-        if((this.getY()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
+        else if((this.getY()+ this.getWidth() / 2) >= brick.getMyImageView().getBoundsInParent().getMinY()) {
             this.y_dir *= -1;
         }
-        if((this.getY()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
+        else if((this.getY()+ this.getWidth() / 2) <= brick.getMyImageView().getBoundsInParent().getMaxY()) {
             this.y_dir *= -1;
         }
     }
