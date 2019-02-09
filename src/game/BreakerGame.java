@@ -414,6 +414,7 @@ public class BreakerGame extends Application {
         //for some reason this speeds up the ball
         else if (code == KeyCode.M){
             animation.stop();
+            scoreNum = 0;
             primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
