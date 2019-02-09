@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.Scanner;
 
 public class BreakerGame extends Application {
-    private static final int FRAMES_PER_SECOND = 60;
-    private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+    private static final int FRAMES_PER_SECOND = 120;
+    private static final int MILLISECOND_DELAY = 600 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
     public static final int WIDTH = 752;
@@ -215,8 +215,8 @@ public class BreakerGame extends Application {
         var toRemove = new ArrayList();
         for (Brick b: myBricks) {
             if (isCollided(myBall, b)) {
-                scoreNum += b.getBrickType();
                 myBall.brickCollision(b);
+                scoreNum += b.getBrickType();
                 b.handleCollision();
                 toRemove.add(b);
             }
@@ -291,14 +291,16 @@ public class BreakerGame extends Application {
 
     private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
         Collections.shuffle(myBricks);
-        ArrayList<String> typeOfPowers = new ArrayList<String>();
-        typeOfPowers.add("pointspower.gif");
-        typeOfPowers.add("sizepower.gif");
-        ArrayList<Powerup> addPowers = new ArrayList<Powerup>();
-        for(int i = 0; i < 7; i++) {
+        ArrayList<Powerup> typeOfPowers = new ArrayList<>();
+        for(int i = 0; i < 3; i++) {
+            typeOfPowers.add(new BiggerBall("sizepower.gif"));
+            typeOfPowers.add(new BiggerPaddle("pointspower.gif"));
+        }
+        ArrayList<Powerup> addPowers = new ArrayList<>();
+        for(int i = 0; i < 6; i++) {
             Collections.shuffle(typeOfPowers);
-            Powerup currPow = new Powerup(typeOfPowers.get(0));
-            currPow.setPowerType(typeOfPowers.get(0));
+            Powerup currPow = typeOfPowers.get(0);
+            typeOfPowers.remove(0);
             currPow.setBrick(myBricks.get(i));
             Brick currBrick = currPow.getBrick();
             currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
@@ -330,7 +332,7 @@ public class BreakerGame extends Application {
         }
         //make ball go slower
         else if (code == KeyCode.S) {
-            if (myBall.getSpeed() >= 4) {
+            if (myBall.getSpeed() >= 3.5) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
@@ -340,7 +342,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(0);
             }
             else {
-                myBall.changeSpeed(3.0);
+                myBall.changeSpeed(2.5);
             }
         }
 
