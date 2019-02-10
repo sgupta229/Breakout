@@ -64,8 +64,6 @@ public class BreakerGame extends Application {
     private String testType;
     private int numSteps;
     private double mouseX;
-    private int currentLevel = 1;
-    private int bricksLeft;
 
 
 
@@ -172,7 +170,7 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height, "lvl" + currentLevel +"_config.txt");
+        myBricks = generateBricks(root, width, height, "lvl3_config.txt");
 
         myPowerups = setPowerups(this.myBricks, root);
 
@@ -197,7 +195,7 @@ public class BreakerGame extends Application {
             i.incrementPos(elapsedTime);
         }
 
-        levelNum.setText("Level: " + currentLevel);
+        levelNum.setText("Level: " + currLevel());
         scoreText.setText("Score: " + scoreNum);
         highScoreText.setText("High Score: " + highScoreUpdater.getHighscore());
 
@@ -210,13 +208,8 @@ public class BreakerGame extends Application {
             }
         }
         //check for win
-        if (bricksLeft == 0){
-            if (currentLevel < 3){
-                currentLevel++;
-                primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
-            } else{
-                primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
-            }
+        if (myBricks.isEmpty()){
+            primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
         }
         checkAndHandleCollisions();
     }
@@ -248,20 +241,15 @@ public class BreakerGame extends Application {
         for (Brick b: myBricks) {
             if (isCollided(myBall, b)) {
                 myBall.brickCollision(b);
-                if (!(b instanceof IndestructibleBrick)) {
-                    scoreNum += b.getBrickType();
-                    b.handleCollision();
-                    toRemove.add(b);
-                    bricksLeft-=1;
-                }
+                scoreNum += b.getBrickType();
+                b.handleCollision();
+                toRemove.add(b);
             }
             if (isCollided(secondBall, b)) {
                 secondBall.brickCollision(b);
-                if (!(b instanceof IndestructibleBrick)) {
-                    scoreNum += b.getBrickType();
-                    b.handleCollision();
-                    toRemove.add(b);
-                }
+                scoreNum += b.getBrickType();
+                b.handleCollision();
+                toRemove.add(b);
             }
         }
         myBricks.removeAll(toRemove);
@@ -280,6 +268,19 @@ public class BreakerGame extends Application {
 
     private boolean isCollided(Sprite a, Sprite b){
         return a.getMyImageView().getBoundsInParent().intersects(b.getMyImageView().getBoundsInParent());
+    }
+
+    private int currLevel() {
+        if(primaryStage.getScene() == this.stageOne) {
+            return 1;
+        }
+        else if(primaryStage.getScene() == this.stageTwo) {
+            return 2;
+        }
+        else if(primaryStage.getScene() == this.stageThree) {
+            return 3;
+        }
+        return 0;
     }
 
     private void setUpText(Group root) {
@@ -429,20 +430,6 @@ public class BreakerGame extends Application {
             setupForTestScene();
             primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
         }
-
-        else if (code == KeyCode.DIGIT1){
-            currentLevel = 1;
-            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
-        }
-        else if (code == KeyCode.DIGIT2){
-            currentLevel = 2;
-            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
-        }
-        else if (code == KeyCode.DIGIT3){
-            currentLevel = 3;
-            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
-        }
-
     }
 
     private void setupForTestScene() {
