@@ -58,7 +58,7 @@ public class BreakerGame extends Application {
     private Text highScoreText = new Text();
     private Text highScoreNum;
 
-    private Scene splashScene, stageOne, stageTwo, stageThree;
+    private Scene splashScene, stage;
     private Stage primaryStage;
     private boolean lostALife = false;
     private boolean isTest = false;
@@ -137,15 +137,11 @@ public class BreakerGame extends Application {
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
         animation.play();
-
         var root = new  Group();
-        // create one top level collection to organize the things in the scene
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
+        stage = new Scene(root, width, height, background);
 
         //adapted from https://stackoverflow.com/questions/18597939/handle-mouse-event-anywhere-with-javafx
-        stageOne.setOnMouseMoved(new EventHandler<MouseEvent>() {
+        stage.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override public void handle(MouseEvent event) {
                 mouseX = event.getSceneX();
             }
@@ -155,7 +151,6 @@ public class BreakerGame extends Application {
         livesLeft = LIVES_AT_START;
         setUpText(root);
 
-        //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif", width, height);
         var ballX = width / 2 - myBall.getWidth() / 2;
         var ballY = height - 35 - myBall.getHeight() / 2;
@@ -180,11 +175,11 @@ public class BreakerGame extends Application {
 
          myPowerups = setPowerups(myBricks, root);
 
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        stage.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
         highScoreUpdater.updateHighScore();
 
-        return stageOne;
+        return stage;
     }
 
     private void step(double elapsedTime) {
@@ -310,26 +305,21 @@ public class BreakerGame extends Application {
             if (num != 0){
                 if (num == 3){
                     b = new IndestructibleBrick("brick" + num + ".gif", width);
-                    b.setPosition(currentX, currentY);
-                    root.getChildren().addAll(b.getMyImageView());
-                    brickList.add(b);
                 }
-                else if (num > 5 && num <9) {
+                else if (num > 5 && num < 9) {
                     b = new MultihitBrick("brick" + num + ".gif", width);
-                    b.setPosition(currentX, currentY);
-                    root.getChildren().addAll(b.getMyImageView());
-                    brickList.add(b);
                 }
                 else {
                     b = new Brick("brick" + num + ".gif", width);
-                    b.setPosition(currentX, currentY);
-                    root.getChildren().addAll(b.getMyImageView());
-                    brickList.add(b);
                 }
-                if (num != 3) {
+                b.setPosition(currentX, currentY);
+                root.getChildren().addAll(b.getMyImageView());
+                brickList.add(b);
+                if (!(b instanceof IndestructibleBrick)) {
                     bricksLeft++;
                 }
             }
+
             if (currentX + brickWidth >= WIDTH){
                 currentX = 0;
                 currentY += brickHeight;
@@ -372,18 +362,6 @@ public class BreakerGame extends Application {
 
     private void handleKeyInput (KeyCode code) {
 
-        //paddle controls, not need since implementation of mouseHandler()
-//        int paddleSpeed = myPaddle.getSpeed();
-//        if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
-//            if(myBall.getSpeed() != 0) {
-//                myPaddle.setX(myPaddle.getX() + paddleSpeed);
-//            }
-//        }
-//        else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
-//            if(myBall.getSpeed() != 0) {
-//                myPaddle.setX(myPaddle.getX() - paddleSpeed);
-//            }
-//        }
         //make ball go faster
         if (code == KeyCode.F) {
             if(myBall.getSpeed() != 0) {
@@ -396,7 +374,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
-        //freeze the ball
+        //freeze/unfreeze the game
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
@@ -419,7 +397,7 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.R){
             myBall.reset(myPaddle);
         }
-        //for some reason this speeds up the ball
+
         else if (code == KeyCode.M){
             animation.stop();
             scoreNum = 0;
@@ -438,6 +416,8 @@ public class BreakerGame extends Application {
             setupForTestScene();
             primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
         }
+
+        //starts level according to digit input
         else if (code == KeyCode.DIGIT1){
             animation.stop();
             currentLevel = 1;
@@ -470,7 +450,7 @@ public class BreakerGame extends Application {
         var config = readConfigFile(testFile);
 
         var root = new  Group();
-        stageOne = new Scene(root, width, height, background);
+        stage = new Scene(root, width, height, background);
         setUpText(root);
 
         if (config.get(0) == 1) {
@@ -493,8 +473,8 @@ public class BreakerGame extends Application {
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
         }
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        return stageOne;
+        stage.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        return stage;
     }
 
     private void checkTest(String testType) {
