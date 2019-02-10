@@ -42,6 +42,7 @@ public class BreakerGame extends Application {
     private Ball myBall;
     //THIS BALL IS FOR THE POWERUP
     private Ball secondBall;
+    private Ball[] myBalls;
     private ArrayList<Brick> myBricks;
     private double brickWidth;
     private double brickHeight;
@@ -57,13 +58,15 @@ public class BreakerGame extends Application {
     private Text highScoreText = new Text();
     private Text highScoreNum;
 
-    private Scene splashScene, stageOne, stageTwo, stageThree;
+    private Scene splashScene, stage;
     private Stage primaryStage;
     private boolean lostALife = false;
     private boolean isTest = false;
     private String testType;
     private int numSteps;
     private double mouseX;
+    private int currentLevel = 1;
+    private int bricksLeft;
 
 
 
@@ -134,32 +137,30 @@ public class BreakerGame extends Application {
         animation.setCycleCount(Timeline.INDEFINITE);
         animation.getKeyFrames().add(frame);
         animation.play();
-
         var root = new  Group();
-        // create one top level collection to organize the things in the scene
-        // create a place to see the shapes
-        stageOne = new Scene(root, width, height, background);
-        // make some shapes and set their properties
+        stage = new Scene(root, width, height, background);
 
         //adapted from https://stackoverflow.com/questions/18597939/handle-mouse-event-anywhere-with-javafx
-        stageOne.setOnMouseMoved(new EventHandler<MouseEvent>() {
+        stage.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override public void handle(MouseEvent event) {
                 mouseX = event.getSceneX();
             }
         });
 
+        bricksLeft = 0;
         livesLeft = LIVES_AT_START;
         setUpText(root);
 
-        //Should we put setPosition in the constructor?
         myBall = new Ball("ball.gif", width, height);
         var ballX = width / 2 - myBall.getWidth() / 2;
         var ballY = height - 35 - myBall.getHeight() / 2;
         myBall.setPosition(ballX, ballY);
 
-        secondBall = new Ball("ball.gif", width, height);
+        secondBall = new Ball("ballTwo.gif", width, height);
         secondBall.setPosition(1000, 1000);
         secondBall.getMyImageView().setVisible(false);
+
+        myBalls = new Ball[] {myBall, secondBall};
 
         myPaddle = new Paddle("paddle.gif");
         var paddleX = width / 2 - myPaddle.getWidth() / 2;
@@ -170,17 +171,16 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height, "lvl3_config.txt");
+        myBricks = generateBricks(root, width, height, "lvl" + currentLevel +"_config.txt");
 
-        myPowerups = setPowerups(this.myBricks, root);
+         myPowerups = setPowerups(myBricks, root);
 
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        stage.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
         highScoreUpdater.updateHighScore();
 
-        return stageOne;
+        return stage;
     }
-
 
     private void step(double elapsedTime) {
         if (isTest){
@@ -195,7 +195,7 @@ public class BreakerGame extends Application {
             i.incrementPos(elapsedTime);
         }
 
-        levelNum.setText("Level: " + currLevel());
+        levelNum.setText("Level: " + currentLevel);
         scoreText.setText("Score: " + scoreNum);
         highScoreText.setText("High Score: " + highScoreUpdater.getHighscore());
 
@@ -208,8 +208,14 @@ public class BreakerGame extends Application {
             }
         }
         //check for win
-        if (myBricks.isEmpty()){
-            primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+        if (bricksLeft == 0){
+            if (currentLevel == 3)
+                primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
+            else {
+                animation.stop();
+                currentLevel++;
+                primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
+            }
         }
         checkAndHandleCollisions();
     }
@@ -238,49 +244,31 @@ public class BreakerGame extends Application {
 
     private void checkAndHandleCollisions() {
         var toRemove = new ArrayList();
-        for (Brick b: myBricks) {
-            if (isCollided(myBall, b)) {
-                myBall.brickCollision(b);
-                scoreNum += b.getBrickType();
-                b.handleCollision();
-                toRemove.add(b);
+
+        for (Ball ball: myBalls) {
+            for (Brick brick : myBricks) {
+                if (ball.isCollided(brick)) {
+                    ball.brickCollision(brick);
+                    if (!(brick instanceof IndestructibleBrick)) {
+                        scoreNum += brick.getBrickType();
+                        if (brick.getBrickType() <= 6 || brick.getBrickType() == 9) {
+                            toRemove.add(brick);
+                            bricksLeft--;
+                        }
+                        brick.handleCollision();
+                    }
+                }
             }
-            if (isCollided(secondBall, b)) {
-                secondBall.brickCollision(b);
-                scoreNum += b.getBrickType();
-                b.handleCollision();
-                toRemove.add(b);
+            myBricks.removeAll(toRemove);
+            if (ball.isCollided(myPaddle)) {
+                ball.paddleCollision(myPaddle);
             }
-        }
-        myBricks.removeAll(toRemove);
-        if (isCollided(myBall, myPaddle)){
-            myBall.paddleCollision(myPaddle);
-        }
-        if (isCollided(secondBall, myPaddle)) {
-            secondBall.paddleCollision(myPaddle);
         }
         for (Powerup p : myPowerups) {
-            if(isCollided(myPaddle, p)) {
+            if(p.isCollided(myPaddle)) {
                 p.paddleCollision(myPaddle, myBall, secondBall);
             }
         }
-    }
-
-    private boolean isCollided(Sprite a, Sprite b){
-        return a.getMyImageView().getBoundsInParent().intersects(b.getMyImageView().getBoundsInParent());
-    }
-
-    private int currLevel() {
-        if(primaryStage.getScene() == this.stageOne) {
-            return 1;
-        }
-        else if(primaryStage.getScene() == this.stageTwo) {
-            return 2;
-        }
-        else if(primaryStage.getScene() == this.stageThree) {
-            return 3;
-        }
-        return 0;
     }
 
     private void setUpText(Group root) {
@@ -315,13 +303,23 @@ public class BreakerGame extends Application {
         double currentY = brickHeight;
         for (int num: configList){
             if (num != 0){
-                b = new Brick("brick" + num + ".gif", width);
-                //Powerup currPow = new Powerup("pointspower.gif");
+                if (num == 3){
+                    b = new IndestructibleBrick("brick" + num + ".gif", width);
+                }
+                else if (num > 5 && num < 9) {
+                    b = new MultihitBrick("brick" + num + ".gif", width);
+                }
+                else {
+                    b = new Brick("brick" + num + ".gif", width);
+                }
                 b.setPosition(currentX, currentY);
-                //currPow.setPosition(currentX, currentY);
                 root.getChildren().addAll(b.getMyImageView());
                 brickList.add(b);
+                if (!(b instanceof IndestructibleBrick)) {
+                    bricksLeft++;
+                }
             }
+
             if (currentX + brickWidth >= WIDTH){
                 currentX = 0;
                 currentY += brickHeight;
@@ -332,15 +330,15 @@ public class BreakerGame extends Application {
     }
 
     private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
-        Collections.shuffle(myBricks);
+//        Collections.shuffle(myBricks);
         ArrayList<Brick> brickTens = new ArrayList<>();
         for(Brick i : myBricks) {
-            if(i.getBrickType() == 7) {
+            if(i.getBrickType() == 9) {
                 brickTens.add(i);
             }
         }
 
-        ArrayList<Powerup> typeOfPowers = new ArrayList<>();
+         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
         typeOfPowers.add(new FasterBall("sizepower.gif"));
         typeOfPowers.add(new DoubleBall("extraballpower.gif"));
         for(int i = 0; i < 2; i++) {
@@ -364,18 +362,6 @@ public class BreakerGame extends Application {
 
     private void handleKeyInput (KeyCode code) {
 
-        //paddle controls, not need since implementation of mouseHandler()
-//        int paddleSpeed = myPaddle.getSpeed();
-//        if (code == KeyCode.RIGHT && !(myPaddle.getX() + myPaddle.getWidth() > myScene.getWidth())) {
-//            if(myBall.getSpeed() != 0) {
-//                myPaddle.setX(myPaddle.getX() + paddleSpeed);
-//            }
-//        }
-//        else if (code == KeyCode.LEFT && !(myPaddle.getX()< 0)) {
-//            if(myBall.getSpeed() != 0) {
-//                myPaddle.setX(myPaddle.getX() - paddleSpeed);
-//            }
-//        }
         //make ball go faster
         if (code == KeyCode.F) {
             if(myBall.getSpeed() != 0) {
@@ -388,7 +374,7 @@ public class BreakerGame extends Application {
                 myBall.changeSpeed(myBall.getSpeed() -1);
             }
         }
-        //freeze the ball
+        //freeze/unfreeze the game
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
@@ -411,7 +397,7 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.R){
             myBall.reset(myPaddle);
         }
-        //for some reason this speeds up the ball
+
         else if (code == KeyCode.M){
             animation.stop();
             scoreNum = 0;
@@ -430,6 +416,23 @@ public class BreakerGame extends Application {
             setupForTestScene();
             primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
         }
+
+        //starts level according to digit input
+        else if (code == KeyCode.DIGIT1){
+            animation.stop();
+            currentLevel = 1;
+            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
+        }
+        else if (code == KeyCode.DIGIT2){
+            animation.stop();
+            currentLevel = 2;
+            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
+        }
+        else if (code == KeyCode.DIGIT3){
+            animation.stop();
+            currentLevel = 3;
+            primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
+        }
     }
 
     private void setupForTestScene() {
@@ -447,7 +450,7 @@ public class BreakerGame extends Application {
         var config = readConfigFile(testFile);
 
         var root = new  Group();
-        stageOne = new Scene(root, width, height, background);
+        stage = new Scene(root, width, height, background);
         setUpText(root);
 
         if (config.get(0) == 1) {
@@ -470,8 +473,8 @@ public class BreakerGame extends Application {
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
         }
-        stageOne.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        return stageOne;
+        stage.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        return stage;
     }
 
     private void checkTest(String testType) {

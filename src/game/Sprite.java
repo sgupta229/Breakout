@@ -17,6 +17,10 @@ public abstract class Sprite {
         setY(y);
     };
 
+    public boolean isCollided(Sprite other){
+        return this.getMyImageView().getBoundsInParent().intersects(other.getMyImageView().getBoundsInParent());
+    }
+
     public void setX(double x){
         this.myImageView.setX(x);
     }
