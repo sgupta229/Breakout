@@ -400,6 +400,7 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.M){
             animation.stop();
             scoreNum = 0;
+            currentLevel = 1;
             primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND));
         }
         else if (code == KeyCode.COMMA){
