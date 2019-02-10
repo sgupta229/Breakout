@@ -257,6 +257,7 @@ public class BreakerGame extends Application {
                         }
                         brick.handleCollision();
                     }
+                    break;
                 }
             }
             myBricks.removeAll(toRemove);
