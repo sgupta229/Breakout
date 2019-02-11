@@ -20,10 +20,10 @@ public abstract class Powerup extends Sprite {
     private Brick myBrick;
     //current power types
         //powerup_paddle.gif == big paddle
-        //powerup_speed.gif == big ball
+        //powerup_speedball.gif == big ball
     /**
-     * Each powerup has a powerType. This can either be 'powerup_paddle.gif' which is BiggerPaddle powerup, 'powerup_speed.gif' which is the FasterBall
-     * powerup, and 'powerup_doubleball.gif', which is the DoubleBall powerup.
+     * Each powerup has a powerType. This can either be 'powerup_paddle.gif' which is BiggerPaddle powerup, 'powerup_speedball.gif' which is the FasterBall
+     * powerup, and 'powerup_twoball.gif', which is the DoubleBall powerup.
      */
     private String powerType;
 

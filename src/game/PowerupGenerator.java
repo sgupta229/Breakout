@@ -49,7 +49,7 @@ public class PowerupGenerator {
 
     public void levelTwoSetup(ArrayList<Brick> myBricks, Group root) {
         for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("powerup_speed.gif"));
+            typeOfPowers.add(new BiggerPaddle("powerup_speedball.gif"));
         }
         for(int i = 0; i < 2; i++) {
             typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
@@ -57,8 +57,8 @@ public class PowerupGenerator {
     }
 
     public void levelThreeSetup(ArrayList<Brick> myBricks, Group root) {
-        typeOfPowers.add(new FasterBall("powerup_speed.gif"));
-        typeOfPowers.add(new DoubleBall("powerup_doubleball.gif"));
+        typeOfPowers.add(new FasterBall("powerup_speedball.gif"));
+        typeOfPowers.add(new DoubleBall("powerup_twoball.gif"));
         for(int i = 0; i < 2; i++) {
             typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
         }
