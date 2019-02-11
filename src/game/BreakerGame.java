@@ -158,12 +158,12 @@ public class BreakerGame extends Application {
         root.getChildren().add(myPaddle.getMyImageView());
 
         var gen = new BrickGenerator();
-        gen.generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
+        gen.generateBricks(root, width,"lvl" + currentLevel +"_config.txt");
         bricksLeft = gen.getNumBricks();
         myBricks = gen.getMyBricks();
 
         PowerupGenerator powerupGenerator = new PowerupGenerator();
-        myPowerups = powerupGenerator.setPowerups(myBricks, root);
+        myPowerups = powerupGenerator.setPowerupsForLevel(currentLevel, myBricks, root);
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -446,13 +446,11 @@ public class BreakerGame extends Application {
                 Platform.exit();
                 System.out.println("Lose Life Test successful!");
             }
-
         }
         if (numSteps > 63){
             Platform.exit();
             System.out.println("test failed");
         }
-
     }
 
     public ArrayList<Integer> readConfigFile(String filename) {
