@@ -17,8 +17,8 @@ public class PowerupGenerator {
         for(int i = 0; i < 2; i++) {
             typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
         }
-        typeOfPowers.add(new FasterBall("powerup_speed.gif"));
-        typeOfPowers.add(new DoubleBall("powerup_doubleball.gif"));
+        typeOfPowers.add(new FasterBall("powerup_speedball.gif"));
+        typeOfPowers.add(new DoubleBall("powerup_twoball.gif"));
         ArrayList<Powerup> addPowers = new ArrayList<>();
         for(int i = 0; i < 4; i++) {
             Collections.shuffle(typeOfPowers);
@@ -32,7 +32,6 @@ public class PowerupGenerator {
             root.getChildren().add(currPow.getMyImageView());
             addPowers.add(currPow);
         }
-        System.out.println(addPowers.size());
         return addPowers;
     }
 }
