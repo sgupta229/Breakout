@@ -19,7 +19,7 @@ public class BiggerPaddle extends Powerup {
 
     @Override
     public void paddleCollision(Paddle myPaddle, Ball myBall, Ball secondBall) {
-        if(this.getPowerType().equals("pointspower.gif")) {
+        if(this.getPowerType().equals("powerup_paddle.gif")) {
             bigPaddle(myPaddle);
             this.setX(1000);
             PauseTransition delay = new PauseTransition(Duration.seconds(10));

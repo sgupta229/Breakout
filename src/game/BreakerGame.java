@@ -175,7 +175,7 @@ public class BreakerGame extends Application {
     private void step(double elapsedTime) {
         if (isTest){
             numSteps++;
-            checkTest(testType);
+//            checkTest(testType);
         }
         updateSprites(elapsedTime);
         mouseHandle();
@@ -314,18 +314,31 @@ public class BreakerGame extends Application {
             currentLevel = 1;
             primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND));
         }
+
         else if (code == KeyCode.COMMA){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_corner_bounce.txt"));
+            if (currentLevel ==1) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_corner_bounce.txt"));
+            if (currentLevel ==2) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_powerup_paddle.txt"));
+            if (currentLevel ==3) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_powerup_twoball.txt"));
         }
         else if (code == KeyCode.PERIOD){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_destroy.txt"));
+            if (currentLevel ==1) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_destroy.txt"));
+            if (currentLevel ==2) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_indestructible.txt"));
+            if (currentLevel ==3) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_multihit.txt"));
+
 
         }
         else if (code == KeyCode.SLASH){
             setupForTestScene();
-            primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
+            if (currentLevel ==1) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_lose_life.txt"));
+            if (currentLevel ==2) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_powerup_speedball.txt"));
+
+            //tests the final win screen
+            if (currentLevel ==3) {
+                bricksLeft=1;
+                primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_destroy.txt"));
+            }
         }
 
         //starts level according to digit input
@@ -348,9 +361,7 @@ public class BreakerGame extends Application {
 
     private void setupForTestScene() {
         myBricks.clear();
-        var b = new Brick("brick1.gif", 1);
-        b.setPosition(10000, 0);
-        myBricks.add(b);
+        bricksLeft = 2;
     }
 
     private Scene setupForTest(int width, int height, Paint background, String testFile){
@@ -376,14 +387,43 @@ public class BreakerGame extends Application {
             myPaddle = new Paddle("paddle.gif");
             myPaddle.setPosition(config.get(7), config.get(8));
             root.getChildren().add(myPaddle.getMyImageView());
+            mouseX = config.get(7);
         }
 
-        if (config.get(9) == 1) {
-            var b = new Brick("brick1.gif", WIDTH);
+        if (config.get(9) > 0) {
+            Brick b;
+            if (config.get(9) == 3){
+                b = new IndestructibleBrick("brick3.gif", WIDTH);
+            }
+            else if (config.get(9) > 6 && config.get(9) < 9){
+                b = new MultihitBrick("brick" + config.get(9) + ".gif", WIDTH);
+            }
+            else
+                b = new Brick("brick" + config.get(9) + ".gif", WIDTH);
+
             b.setPosition(config.get(10), config.get(11));
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
         }
+
+        if (config.get(12) > 0){
+            Powerup p;
+            if (config.get(12) == 2){
+                p = new FasterBall("powerup_speed.gif");
+
+            }
+            if (config.get(12) == 3){
+                p = new DoubleBall("powerup_doubleball.gif");
+            }
+            else
+                p = new BiggerPaddle("powerup_paddle.gif");
+            p.setPosition(config.get(10), config.get(11));
+            p.getMyImageView().setVisible(false);
+            root.getChildren().add(p.getMyImageView());
+            myPowerups.clear();
+            myPowerups.add(p);
+        }
+
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return scene;
     }

@@ -23,7 +23,7 @@ public class DoubleBall extends Powerup {
 
     @Override
     public void paddleCollision(Paddle myPaddle, Ball myBall, Ball secondBall) {
-        if(this.getPowerType().equals("extraballpower.gif")) {
+        if(this.getPowerType().equals("powerup_doubleball.gif")) {
             retrieveBall(myBall, secondBall);
             this.setX(1000);
             PauseTransition delay = new PauseTransition(Duration.seconds(10));

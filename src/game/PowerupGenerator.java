@@ -14,10 +14,10 @@ public class PowerupGenerator {
             }
         }
         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
-        typeOfPowers.add(new FasterBall("sizepower.gif"));
-        typeOfPowers.add(new DoubleBall("extraballpower.gif"));
+        typeOfPowers.add(new FasterBall("powerup_speed.gif"));
+        typeOfPowers.add(new DoubleBall("powerup_doubleball.gif"));
         for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("pointspower.gif"));
+            typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
         }
         ArrayList<Powerup> addPowers = new ArrayList<>();
         for(int i = 0; i < 4; i++) {
