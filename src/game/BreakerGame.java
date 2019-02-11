@@ -55,6 +55,7 @@ public class BreakerGame extends Application {
     private int numSteps;
     private double mouseX;
     private int currentLevel = 1;
+
     private int bricksLeft;
 
     @Override
@@ -134,7 +135,6 @@ public class BreakerGame extends Application {
             }
         });
 
-        bricksLeft = 0;
         livesLeft = LIVES_AT_START;
         setUpText(root);
 
@@ -158,7 +158,10 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
+        var gen = new BrickGenerator();
+        gen.generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
+        bricksLeft = gen.getNumBricks();
+        myBricks = gen.getMyBricks();
 
         myPowerups = setPowerups(myBricks, root);
 
@@ -174,19 +177,19 @@ public class BreakerGame extends Application {
             numSteps++;
             checkTest(testType);
         }
+
         updateSprites(elapsedTime);
         mouseHandle();
-
-        for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
-            i.incrementPos(elapsedTime);
-        }
 
         levelNum.setText("Level: " + currentLevel);
         scoreText.setText("Score: " + scoreNum);
         highScoreText.setText("High Score: " + highScoreUpdater.getHighscore());
 
-        //check for loss
+        checkLossAndWin();
+        checkAndHandleCollisions();
+    }
+
+    private void checkLossAndWin() {
         if (lostALife){
             livesLeft -= 1;
             lifeCount.setText("Lives: " + livesLeft);
@@ -194,7 +197,6 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-        //check for win
         if (bricksLeft == 0){
             if (currentLevel == 3)
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
@@ -204,7 +206,6 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-        checkAndHandleCollisions();
     }
 
     private void mouseHandle(){
@@ -226,6 +227,10 @@ public class BreakerGame extends Application {
         lostALife = myBall.checkMissedBall(myPaddle);
         myBall.incrementPos(elapsedTime, myPaddle);
         secondBall.incrementPos(elapsedTime, myPaddle);
+        for(Powerup i : myPowerups) {
+            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
+            i.incrementPos(elapsedTime);
+        }
     }
 
     private void checkAndHandleCollisions() {
@@ -279,42 +284,6 @@ public class BreakerGame extends Application {
         root.getChildren().addAll(lifeCount, levelNum, scoreText, highScoreText);
     }
 
-    private ArrayList<Brick> generateBricks(Group root, double width, String lvlConfigFile) {
-        var brickList = new ArrayList<Brick>();
-        var configList = readConfigFile(lvlConfigFile);
-
-        var b = new Brick("brick1.gif", width);
-        var brickWidth = b.getWidth();
-        var brickHeight = b.getHeight();
-        double currentX = 0;
-        double currentY = brickHeight;
-        for (int num: configList){
-            if (num != 0){
-                if (num == 3){
-                    b = new IndestructibleBrick("brick" + num + ".gif", width);
-                }
-                else if (num > 5 && num < 9) {
-                    b = new MultihitBrick("brick" + num + ".gif", width);
-                }
-                else {
-                    b = new Brick("brick" + num + ".gif", width);
-                }
-                b.setPosition(currentX, currentY);
-                root.getChildren().addAll(b.getMyImageView());
-                brickList.add(b);
-                if (!(b instanceof IndestructibleBrick)) {
-                    bricksLeft++;
-                }
-            }
-
-            if (currentX + brickWidth >= WIDTH){
-                currentX = 0;
-                currentY += brickHeight;
-            }
-            else currentX += brickWidth;
-        }
-        return brickList;
-    }
 
     private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
         ArrayList<Brick> brickTens = new ArrayList<>();
@@ -490,7 +459,7 @@ public class BreakerGame extends Application {
 
     }
 
-    private ArrayList<Integer> readConfigFile(String filename) {
+    public ArrayList<Integer> readConfigFile(String filename) {
         var input = new Scanner(this.getClass().getClassLoader().getResourceAsStream(filename));
         input.useDelimiter(" |\\n");
         ArrayList<Integer> results = new ArrayList<>();
