@@ -336,8 +336,7 @@ public class BreakerGame extends Application {
                 brickTens.add(i);
             }
         }
-
-         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
+        ArrayList<Powerup> typeOfPowers = new ArrayList<>();
         typeOfPowers.add(new FasterBall("sizepower.gif"));
         typeOfPowers.add(new DoubleBall("extraballpower.gif"));
         for(int i = 0; i < 2; i++) {
