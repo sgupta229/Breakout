@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BreakerGame extends Application {
@@ -35,9 +36,9 @@ public class BreakerGame extends Application {
     private Ball myBall;
     private Ball secondBall;
     private Ball[] myBallArray;
-    private ArrayList<Brick> myBricks;
+    private List<Brick> myBricks;
     private Paddle myPaddle;
-    private ArrayList<Powerup> myPowerups = new ArrayList<>();
+    private List<Powerup> myPowerups = new ArrayList<>();
 
     private HighScoreUpdater highScoreUpdater = new HighScoreUpdater();
     private int livesLeft;
@@ -202,7 +203,7 @@ public class BreakerGame extends Application {
         if (lostALife){
             livesLeft -= 1;
             lifeCount.setText("Lives: " + livesLeft);
-            if (livesLeft <= 0){
+            if (livesLeft < 0){
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }

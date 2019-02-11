@@ -3,9 +3,10 @@ package game;
 import javafx.scene.Group;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BrickGenerator extends BreakerGame{
-    private ArrayList<Brick> myBricks;
+    private List<Brick> myBricks;
     private int numBricks;
 
     public void generateBricks(Group root, double width, String lvlConfigFile) {
@@ -45,7 +46,7 @@ public class BrickGenerator extends BreakerGame{
         }
         myBricks = brickList;
     }
-    public ArrayList<Brick> getMyBricks() {
+    public List<Brick> getMyBricks() {
         return myBricks;
     }
 

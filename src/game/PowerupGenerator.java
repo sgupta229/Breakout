@@ -3,10 +3,11 @@ package game;
 import javafx.scene.Group;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class PowerupGenerator {
 
-    public ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
+    public List<Powerup> setPowerups(List<Brick> myBricks, Group root) {
         ArrayList<Powerup> typeOfPowers = new ArrayList<>();
         ArrayList<Brick> powerupBrickList = new ArrayList<>();
         for(Brick i : myBricks) {
