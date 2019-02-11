@@ -9,7 +9,7 @@ public class DoubleBall extends Powerup {
     public void retrieveBall(Ball myBall, Ball secondBall) {
         secondBall.setPosition(myBall.getX(), myBall.getY());
         secondBall.getMyImageView().setVisible(true);
-        secondBall.changeSpeed(3.0);
+        secondBall.changeSpeed(2.75);
     }
 
     @Override

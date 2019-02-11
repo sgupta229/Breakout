@@ -6,27 +6,21 @@ import java.util.Collections;
 
 public class PowerupGenerator {
 
-    private ArrayList<Powerup> typeOfPowers = new ArrayList<>();
-
-    public ArrayList<Powerup> setPowerupsForLevel(int level, ArrayList<Brick> myBricks, Group root) {
+    public ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
+        ArrayList<Powerup> typeOfPowers = new ArrayList<>();
         ArrayList<Brick> powerupBrickList = new ArrayList<>();
         for(Brick i : myBricks) {
             if(i.getBrickType() == 9) {
                 powerupBrickList.add(i);
             }
         }
-        if(level == 1) {
-            levelOneSetup(myBricks, root);
+        for(int i = 0; i < 2; i++) {
+            typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
         }
-        else if (level == 2) {
-            levelTwoSetup(myBricks, root);
-        }
-        else if (level == 3) {
-            levelThreeSetup(myBricks, root);
-        }
-
+        typeOfPowers.add(new FasterBall("powerup_speed.gif"));
+        typeOfPowers.add(new DoubleBall("powerup_doubleball.gif"));
         ArrayList<Powerup> addPowers = new ArrayList<>();
-        for(int i = 0; i < powerupBrickList.size(); i++) {
+        for(int i = 0; i < 4; i++) {
             Collections.shuffle(typeOfPowers);
             Powerup currPow = typeOfPowers.get(0);
             typeOfPowers.remove(0);
@@ -38,29 +32,7 @@ public class PowerupGenerator {
             root.getChildren().add(currPow.getMyImageView());
             addPowers.add(currPow);
         }
+        System.out.println(addPowers.size());
         return addPowers;
-    }
-
-    public void levelOneSetup(ArrayList<Brick> myBricks, Group root) {
-        for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
-        }
-    }
-
-    public void levelTwoSetup(ArrayList<Brick> myBricks, Group root) {
-        for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("powerup_speedball.gif"));
-        }
-        for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
-        }
-    }
-
-    public void levelThreeSetup(ArrayList<Brick> myBricks, Group root) {
-        typeOfPowers.add(new FasterBall("powerup_speedball.gif"));
-        typeOfPowers.add(new DoubleBall("powerup_twoball.gif"));
-        for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("powerup_paddle.gif"));
-        }
     }
 }

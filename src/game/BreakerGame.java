@@ -37,7 +37,7 @@ public class BreakerGame extends Application {
     private Ball[] myBallArray;
     private ArrayList<Brick> myBricks;
     private Paddle myPaddle;
-    private ArrayList<Powerup> myPowerups;
+    private ArrayList<Powerup> myPowerups = new ArrayList<>();
 
     private HighScoreUpdater highScoreUpdater = new HighScoreUpdater();
     private int livesLeft;
@@ -172,7 +172,7 @@ public class BreakerGame extends Application {
         myBricks = gen.getMyBricks();
 
         PowerupGenerator powerupGenerator = new PowerupGenerator();
-        myPowerups = powerupGenerator.setPowerupsForLevel(currentLevel, myBricks, root);
+        myPowerups = powerupGenerator.setPowerups(myBricks, root);
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -190,7 +190,7 @@ public class BreakerGame extends Application {
         mouseHandle();
 
         for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
+            i.checkBrickHit(myBricks, myBall, secondBall);
             i.incrementPos(elapsedTime);
         }
 

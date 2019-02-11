@@ -96,13 +96,12 @@ public abstract class Powerup extends Sprite {
     /**
      * Checks to see if a powerup's brick was hit. If it was, change the y-velocity to 50 so the powerup starts moving and
      * set the ImageView visibility to true.
-     * @param elapsedTime
      * @param myBricks
      * @param myBall
      * @param secondBall
      */
 
-    public void checkBrickHit(double elapsedTime, ArrayList<Brick> myBricks, Ball myBall, Ball secondBall) {
+    public void checkBrickHit(ArrayList<Brick> myBricks, Ball myBall, Ball secondBall) {
         if(myBricks.contains(this.getBrick()) == false) {
             if(myBall.getSpeed() != 0 || secondBall.getSpeed() != 0) {
                 this.setY_vel(50);
