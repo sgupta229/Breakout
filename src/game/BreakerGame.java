@@ -160,7 +160,8 @@ public class BreakerGame extends Application {
 
         myBricks = generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
 
-        myPowerups = setPowerups(myBricks, root);
+        PowerupGenerator powerupGenerator = new PowerupGenerator();
+        myPowerups = powerupGenerator.setPowerups(myBricks, root);
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
 
@@ -260,23 +261,11 @@ public class BreakerGame extends Application {
 
     private void setUpText(Group root) {
         lifeCount = new Text("Lives: " + livesLeft);
-        lifeCount.setX(5);
-        lifeCount.setY(15);
-        lifeCount.setFill(Color.ORANGERED);
-        lifeCount.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        levelNum.setX(360);
-        levelNum.setY(15);
-        levelNum.setFill(Color.GREEN);
-        levelNum.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        scoreText.setX(677);
-        scoreText.setY(15);
-        scoreText.setFill(Color.BLUEVIOLET);
-        scoreText.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        highScoreText.setX(643);
-        highScoreText.setY(30);
-        highScoreText.setFill(Color.DARKSALMON);
-        highScoreText.setFont(Font.font("times", FontWeight.BOLD, FontPosture.REGULAR, 15));
-        root.getChildren().addAll(lifeCount, levelNum, scoreText, highScoreText);
+        TextManager textManager = new TextManager();
+        textManager.setText(this.lifeCount, 5, 15, Color.ORANGERED, root);
+        textManager.setText(this.levelNum, 360, 15, Color.GREEN, root);
+        textManager.setText(this.scoreText, 677, 15, Color.BLUEVIOLET, root);
+        textManager.setText(this.highScoreText, 643, 30, Color.DARKSALMON, root);
     }
 
     private ArrayList<Brick> generateBricks(Group root, double width, String lvlConfigFile) {
@@ -314,35 +303,6 @@ public class BreakerGame extends Application {
             else currentX += brickWidth;
         }
         return brickList;
-    }
-
-    private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
-        ArrayList<Brick> brickTens = new ArrayList<>();
-        for(Brick i : myBricks) {
-            if(i.getBrickType() == 9) {
-                brickTens.add(i);
-            }
-        }
-        ArrayList<Powerup> typeOfPowers = new ArrayList<>();
-        typeOfPowers.add(new FasterBall("sizepower.gif"));
-        typeOfPowers.add(new DoubleBall("extraballpower.gif"));
-        for(int i = 0; i < 2; i++) {
-            typeOfPowers.add(new BiggerPaddle("pointspower.gif"));
-        }
-        ArrayList<Powerup> addPowers = new ArrayList<>();
-        for(int i = 0; i < 4; i++) {
-            Collections.shuffle(typeOfPowers);
-            Powerup currPow = typeOfPowers.get(0);
-            typeOfPowers.remove(0);
-            currPow.setBrick(brickTens.get(i));
-            Brick currBrick = currPow.getBrick();
-            currPow.setX(currBrick.getX() - currPow.getMyImageView().getBoundsInLocal().getWidth() / 2 + currBrick.getMyImageView().getBoundsInLocal().getWidth()/2);
-            currPow.setY(currBrick.getY() - currPow.getMyImageView().getBoundsInLocal().getHeight() / 2 + currBrick.getMyImageView().getBoundsInLocal().getHeight()/2);
-            currPow.getMyImageView().setVisible(false);
-            root.getChildren().add(currPow.getMyImageView());
-            addPowers.add(currPow);
-        }
-        return addPowers;
     }
 
     private void handleKeyInput (KeyCode code) {
