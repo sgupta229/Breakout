@@ -286,27 +286,25 @@ public class BreakerGame extends Application {
         if (code == KeyCode.F) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(myBall.getSpeed() + 1);
+                secondBall.changeSpeed(myBall.getSpeed() + 1);
             }
         }
         //make ball go slower
         else if (code == KeyCode.S) {
             if (myBall.getSpeed() >= 1.0) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
+                secondBall.changeSpeed(secondBall.getSpeed() - 1);
             }
         }
         //freeze/unfreeze the game
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
-                if(secondBall.getMyImageView().isVisible()) {
-                    secondBall.changeSpeed(0);
-                }
+                secondBall.changeSpeed(0);
             }
             else {
                 myBall.changeSpeed(2.75);
-                if(secondBall.getMyImageView().isVisible()) {
-                    secondBall.changeSpeed(2.75);
-                }
+                secondBall.changeSpeed(2.75);
             }
         }
 
