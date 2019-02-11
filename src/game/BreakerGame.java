@@ -179,19 +179,19 @@ public class BreakerGame extends Application {
             numSteps++;
             checkTest(testType);
         }
+
         updateSprites(elapsedTime);
         mouseHandle();
-
-        for(Powerup i : myPowerups) {
-            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
-            i.incrementPos(elapsedTime);
-        }
 
         levelNum.setText("Level: " + currentLevel);
         scoreText.setText("Score: " + scoreNum);
         highScoreText.setText("High Score: " + highScoreUpdater.getHighscore());
 
-        //check for loss
+        checkLossAndWin();
+        checkAndHandleCollisions();
+    }
+
+    private void checkLossAndWin() {
         if (lostALife){
             livesLeft -= 1;
             lifeCount.setText("Lives: " + livesLeft);
@@ -199,7 +199,6 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-        //check for win
         if (bricksLeft == 0){
             if (currentLevel == 3)
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
@@ -209,7 +208,6 @@ public class BreakerGame extends Application {
                 primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND));
             }
         }
-        checkAndHandleCollisions();
     }
 
     private void mouseHandle(){
@@ -231,6 +229,10 @@ public class BreakerGame extends Application {
         lostALife = myBall.checkMissedBall(myPaddle);
         myBall.incrementPos(elapsedTime, myPaddle);
         secondBall.incrementPos(elapsedTime, myPaddle);
+        for(Powerup i : myPowerups) {
+            i.checkBrickHit(elapsedTime, myBricks, myBall, secondBall);
+            i.incrementPos(elapsedTime);
+        }
     }
 
     private void checkAndHandleCollisions() {
