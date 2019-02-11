@@ -157,7 +157,10 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
+        var gen = new BrickGenerator();
+        gen.generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
+        bricksLeft = gen.getNumBricks();
+        myBricks = gen.getMyBricks();
 
         PowerupGenerator powerupGenerator = new PowerupGenerator();
         myPowerups = powerupGenerator.setPowerups(myBricks, root);
@@ -265,43 +268,6 @@ public class BreakerGame extends Application {
         textManager.setText(this.levelNum, 360, 15, Color.GREEN, root);
         textManager.setText(this.scoreText, 677, 15, Color.BLUEVIOLET, root);
         textManager.setText(this.highScoreText, 643, 30, Color.DARKSALMON, root);
-    }
-
-    private ArrayList<Brick> generateBricks(Group root, double width, String lvlConfigFile) {
-        var brickList = new ArrayList<Brick>();
-        var configList = readConfigFile(lvlConfigFile);
-
-        var b = new Brick("brick1.gif", width);
-        var brickWidth = b.getWidth();
-        var brickHeight = b.getHeight();
-        double currentX = 0;
-        double currentY = brickHeight;
-        for (int num: configList){
-            if (num != 0){
-                if (num == 3){
-                    b = new IndestructibleBrick("brick" + num + ".gif", width);
-                }
-                else if (num > 5 && num < 9) {
-                    b = new MultihitBrick("brick" + num + ".gif", width);
-                }
-                else {
-                    b = new Brick("brick" + num + ".gif", width);
-                }
-                b.setPosition(currentX, currentY);
-                root.getChildren().addAll(b.getMyImageView());
-                brickList.add(b);
-                if (!(b instanceof IndestructibleBrick)) {
-                    bricksLeft++;
-                }
-            }
-
-            if (currentX + brickWidth >= WIDTH){
-                currentX = 0;
-                currentY += brickHeight;
-            }
-            else currentX += brickWidth;
-        }
-        return brickList;
     }
 
     private void handleKeyInput (KeyCode code) {
