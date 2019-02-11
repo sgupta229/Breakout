@@ -87,6 +87,9 @@ public class BreakerGame extends Application {
 
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
+        if (isTest){
+
+        }
         animation.stop();
 
         VBox vb = new VBox(20);
@@ -97,7 +100,17 @@ public class BreakerGame extends Application {
 
         if (livesLeft <= 0) str = "lost :( ";
         else str = "win :D! ";
-        Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!");
+
+        String testAddOn;
+        if (isTest) {
+            testAddOn = " (WIN TEST SUCCESSFUL)";
+        }
+        else {
+            testAddOn = "";
+        }
+
+            Label label1 = new Label("You " + str + "Your final score was " + scoreNum + "!" + testAddOn);
+
 
         Label finalScore = new Label("Press the button to play again!");
 
@@ -142,11 +155,7 @@ public class BreakerGame extends Application {
         var ballY = height - 35 - myBall.getHeight() / 2;
         myBall.setPosition(ballX, ballY);
 
-        secondBall = new Ball("ballTwo.gif", width, height);
-        secondBall.setPosition(1000, 1000);
-        secondBall.getMyImageView().setVisible(false);
-
-        myBallArray = new Ball[] {myBall, secondBall};
+        initSecondBall();
 
         myPaddle = new Paddle("paddle.gif");
         var paddleX = width / 2 - myPaddle.getWidth() / 2;
@@ -175,7 +184,7 @@ public class BreakerGame extends Application {
     private void step(double elapsedTime) {
         if (isTest){
             numSteps++;
-//            checkTest(testType);
+            checkTest(testType);
         }
         updateSprites(elapsedTime);
         mouseHandle();
@@ -324,8 +333,8 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.PERIOD){
             setupForTestScene();
             if (currentLevel ==1) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_destroy.txt"));
-            if (currentLevel ==2) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_indestructible.txt"));
-            if (currentLevel ==3) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_multihit.txt"));
+            if (currentLevel ==2) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_multihit.txt"));
+            if (currentLevel ==3) primaryStage.setScene(setupForTest(WIDTH, HEIGHT, BACKGROUND, "test_brick_indestructible.txt"));
 
 
         }
@@ -404,30 +413,43 @@ public class BreakerGame extends Application {
             b.setPosition(config.get(10), config.get(11));
             myBricks.add(b);
             root.getChildren().add(b.getMyImageView());
+
+            if (config.get(12) > 0){
+                Powerup p;
+                if (config.get(12) == 2){
+                    p = new FasterBall("powerup_speed.gif");
+
+                }
+                else if (config.get(12) == 3){
+                    p = new DoubleBall("powerup_doubleball.gif");
+                    initSecondBall();
+                    root.getChildren().add(secondBall.getMyImageView());
+                }
+                else
+                    p = new BiggerPaddle("powerup_paddle.gif");
+                p.setPosition(config.get(10), config.get(11));
+                p.getMyImageView().setVisible(false);
+                root.getChildren().add(p.getMyImageView());
+                p.setBrick(b);
+                myPowerups.clear();
+                myPowerups.add(p);
+            }
         }
 
-        if (config.get(12) > 0){
-            Powerup p;
-            if (config.get(12) == 2){
-                p = new FasterBall("powerup_speed.gif");
 
-            }
-            if (config.get(12) == 3){
-                p = new DoubleBall("powerup_doubleball.gif");
-            }
-            else
-                p = new BiggerPaddle("powerup_paddle.gif");
-            p.setPosition(config.get(10), config.get(11));
-            p.getMyImageView().setVisible(false);
-            root.getChildren().add(p.getMyImageView());
-            myPowerups.clear();
-            myPowerups.add(p);
-        }
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         return scene;
     }
 
+    private void initSecondBall() {
+        secondBall = new Ball("ballTwo.gif", WIDTH, HEIGHT);
+        secondBall.setPosition(1000, 1000);
+        secondBall.getMyImageView().setVisible(false);
+        myBallArray = new Ball[] {myBall, secondBall};
+    }
+
+    //check for win is in SetupResetScreen
     private void checkTest(String testType) {
         if (testType.equals("test_corner_bounce.txt")){
             if (myBall.getXDirection()>0 && myBall.getX() == 100 && myBall.getY() == 100){
@@ -435,8 +457,8 @@ public class BreakerGame extends Application {
                 System.out.println("Corner Bounce Test successful!");
             }
         }
-        else if (testType.equals("test_brick_destroy.txt")){
-            if (myBricks.size() == 1){
+        else if (testType.equals("test_brick_destroy.txt") || testType.equals("test_brick_multihit.txt")){
+            if (myBricks.size() == 0 && !(bricksLeft==0)){
                 Platform.exit();
                 System.out.println("Brick Destroy Test successful!");
             }
@@ -447,9 +469,41 @@ public class BreakerGame extends Application {
                 System.out.println("Lose Life Test successful!");
             }
         }
-        if (numSteps > 63){
-            Platform.exit();
-            System.out.println("test failed");
+        if (numSteps > 100 && !testType.contains("powerup")){
+            if (testType.equals("test_brick_indestructible.txt")){
+                if (myBricks.size() ==1){
+                    Platform.exit();
+                    System.out.println("Indestructible Brick Test successful!");
+                }
+            }
+            else{
+                Platform.exit();
+                System.out.println("test failed");
+            }
+        }
+        else if (numSteps > 225){
+            if (testType.equals("test_powerup_paddle.txt")){
+                if (myPaddle.getWidth()==200){
+                    Platform.exit();
+                    System.out.println("Paddle Powerup Test successful!");
+                }
+            }
+            else if (testType.equals("test_powerup_speedball.txt")){
+                if (myBall.getSpeed()==4){
+                    Platform.exit();
+                    System.out.println("Speed Powerup Test successful!");
+                }
+            }
+            else if (testType.equals("test_powerup_twoball.txt")){
+                if (secondBall.getMyImageView().isVisible()){
+                    Platform.exit();
+                    System.out.println("Doubleball Powerup Test successful!");
+                }
+            }
+            else {
+                Platform.exit();
+                System.out.println("test failed");
+            }
         }
     }
 
