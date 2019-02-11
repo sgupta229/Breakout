@@ -417,11 +417,11 @@ public class BreakerGame extends Application {
             if (config.get(12) > 0){
                 Powerup p;
                 if (config.get(12) == 2){
-                    p = new FasterBall("powerup_speed.gif");
+                    p = new FasterBall("powerup_speedball.gif");
 
                 }
                 else if (config.get(12) == 3){
-                    p = new DoubleBall("powerup_doubleball.gif");
+                    p = new DoubleBall("powerup_twoball.gif");
                     initSecondBall();
                     root.getChildren().add(secondBall.getMyImageView());
                 }
@@ -449,7 +449,7 @@ public class BreakerGame extends Application {
         myBallArray = new Ball[] {myBall, secondBall};
     }
 
-    //check for win is in SetupResetScreen
+    //check for win is in SetupResetScreen()
     private void checkTest(String testType) {
         if (testType.equals("test_corner_bounce.txt")){
             if (myBall.getXDirection()>0 && myBall.getX() == 100 && myBall.getY() == 100){

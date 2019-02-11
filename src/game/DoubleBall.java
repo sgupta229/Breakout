@@ -14,7 +14,7 @@ public class DoubleBall extends Powerup {
 
     @Override
     public void paddleCollision(Paddle myPaddle, Ball myBall, Ball secondBall) {
-        if(this.getPowerType().equals("powerup_doubleball.gif")) {
+        if(this.getPowerType().equals("powerup_twoball.gif")) {
             retrieveBall(myBall, secondBall);
             this.setX(1000);
         }
