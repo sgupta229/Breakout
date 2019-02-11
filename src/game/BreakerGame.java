@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class BreakerGame extends Application {
@@ -441,13 +440,11 @@ public class BreakerGame extends Application {
                 Platform.exit();
                 System.out.println("Lose Life Test successful!");
             }
-
         }
         if (numSteps > 63){
             Platform.exit();
             System.out.println("test failed");
         }
-
     }
 
     public ArrayList<Integer> readConfigFile(String filename) {
