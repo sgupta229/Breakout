@@ -19,11 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -66,8 +61,6 @@ public class BreakerGame extends Application {
     private double mouseX;
     private int currentLevel = 1;
     private int bricksLeft;
-
-
 
     @Override
     public void start (Stage stage) {
