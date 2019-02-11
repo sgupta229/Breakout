@@ -470,15 +470,6 @@ public class BreakerGame extends Application {
         return results;
     }
 
-
-    public int getBricksLeft() {
-        return bricksLeft;
-    }
-
-    public void setBricksLeft(int num) {
-        this.bricksLeft = num;
-    }
-
     public static void main (String[] args) {
         launch(args);
     }
