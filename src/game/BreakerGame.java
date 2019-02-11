@@ -19,11 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.geometry.Pos;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -33,19 +28,15 @@ public class BreakerGame extends Application {
     private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static final Paint BACKGROUND = Color.GHOSTWHITE;
-    public static final int WIDTH = 750;
-    public static final int HEIGHT = 500;
+    private static final int WIDTH = 750;
+    private static final int HEIGHT = 500;
     private static final int LIVES_AT_START = 3;
     private Timeline animation;
-    private Scene myScene;
 
     private Ball myBall;
-    //THIS BALL IS FOR THE POWERUP
     private Ball secondBall;
     private Ball[] myBallArray;
     private ArrayList<Brick> myBricks;
-    private double brickWidth;
-    private double brickHeight;
     private Paddle myPaddle;
     private ArrayList<Powerup> myPowerups;
 
@@ -56,7 +47,6 @@ public class BreakerGame extends Application {
     private Text scoreText = new Text();
     private int scoreNum;
     private Text highScoreText = new Text();
-    private Text highScoreNum;
 
     private Stage primaryStage;
     private boolean lostALife = false;
@@ -72,7 +62,7 @@ public class BreakerGame extends Application {
     @Override
     public void start (Stage stage) {
         primaryStage = stage;
-        myScene = setupSplashScreen(WIDTH, HEIGHT, BACKGROUND);
+        var myScene = setupSplashScreen(WIDTH, HEIGHT, BACKGROUND);
         primaryStage.setScene(myScene);
         primaryStage.setTitle("Breakout Game by Team 17");
         primaryStage.show();
@@ -140,7 +130,7 @@ public class BreakerGame extends Application {
         var scene = new Scene(root, width, height, background);
 
         //adapted from https://stackoverflow.com/questions/18597939/handle-mouse-event-anywhere-with-javafx
-        scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
+        scene.setOnMouseMoved(new EventHandler<>() {
             @Override public void handle(MouseEvent event) {
                 mouseX = event.getSceneX();
             }
@@ -170,7 +160,7 @@ public class BreakerGame extends Application {
         root.getChildren().add(secondBall.getMyImageView());
         root.getChildren().add(myPaddle.getMyImageView());
 
-        myBricks = generateBricks(root, width, height, "lvl" + currentLevel +"_config.txt");
+        myBricks = generateBricks(root, width, "lvl" + currentLevel +"_config.txt");
 
         myPowerups = setPowerups(myBricks, root);
 
@@ -291,13 +281,13 @@ public class BreakerGame extends Application {
         root.getChildren().addAll(lifeCount, levelNum, scoreText, highScoreText);
     }
 
-    private ArrayList<Brick> generateBricks(Group root, double width, double height, String lvlConfigFile) {
+    private ArrayList<Brick> generateBricks(Group root, double width, String lvlConfigFile) {
         var brickList = new ArrayList<Brick>();
         var configList = readConfigFile(lvlConfigFile);
 
         var b = new Brick("brick1.gif", width);
-        brickWidth = b.getWidth();
-        brickHeight = b.getHeight();
+        var brickWidth = b.getWidth();
+        var brickHeight = b.getHeight();
         double currentX = 0;
         double currentY = brickHeight;
         for (int num: configList){
@@ -329,7 +319,6 @@ public class BreakerGame extends Application {
     }
 
     private ArrayList<Powerup> setPowerups(ArrayList<Brick> myBricks, Group root) {
-//        Collections.shuffle(myBricks);
         ArrayList<Brick> brickTens = new ArrayList<>();
         for(Brick i : myBricks) {
             if(i.getBrickType() == 9) {
@@ -377,13 +366,13 @@ public class BreakerGame extends Application {
         else if (code == KeyCode.SPACE) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(0);
-                if(secondBall.getMyImageView().isVisible() == true) {
+                if(secondBall.getMyImageView().isVisible()) {
                     secondBall.changeSpeed(0);
                 }
             }
             else {
                 myBall.changeSpeed(2.75);
-                if(secondBall.getMyImageView().isVisible() == true) {
+                if(secondBall.getMyImageView().isVisible()) {
                     secondBall.changeSpeed(2.75);
                 }
             }
