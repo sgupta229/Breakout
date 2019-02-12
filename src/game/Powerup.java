@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>Powerup Class</h1>
@@ -18,9 +19,6 @@ public abstract class Powerup extends Sprite {
      * Each powerup has a myBrick instance variable, which represents which brick the powerup is in.
      */
     private Brick myBrick;
-    //current power types
-        //powerup_paddle.gif == big paddle
-        //powerup_speedball.gif == big ball
     /**
      * Each powerup has a powerType. This can either be 'powerup_paddle.gif' which is BiggerPaddle powerup, 'powerup_speedball.gif' which is the FasterBall
      * powerup, and 'powerup_twoball.gif', which is the DoubleBall powerup.
@@ -101,7 +99,7 @@ public abstract class Powerup extends Sprite {
      * @param secondBall
      */
 
-    public void checkBrickHit(ArrayList<Brick> myBricks, Ball myBall, Ball secondBall) {
+    public void checkBrickHit(List<Brick> myBricks, Ball myBall, Ball secondBall) {
         if(myBricks.contains(this.getBrick()) == false) {
             if(myBall.getSpeed() != 0 || secondBall.getSpeed() != 0) {
                 this.setY_vel(50);
