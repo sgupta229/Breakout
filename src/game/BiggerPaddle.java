@@ -19,9 +19,9 @@ public class BiggerPaddle extends Powerup {
 
     @Override
     public void paddleCollision(Paddle myPaddle, Ball myBall, Ball secondBall) {
+        super.paddleCollision(myPaddle, myBall, secondBall);
         if(this.getPowerType().equals("powerup_paddle.gif")) {
             bigPaddle(myPaddle);
-            this.setX(1000);
             PauseTransition delay = new PauseTransition(Duration.seconds(10));
             delay.setOnFinished(event -> resetPaddleSize(myPaddle));
             delay.play();

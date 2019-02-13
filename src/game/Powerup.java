@@ -116,5 +116,8 @@ public abstract class Powerup extends Sprite {
     }
 
 
-    public abstract void paddleCollision(Paddle myPaddle, Ball ball, Ball secondBall);
+    public void paddleCollision(Paddle myPaddle, Ball ball, Ball secondBall) {
+        this.getMyImageView().setVisible(false);
+        this.setX(1000);
+    }
 }

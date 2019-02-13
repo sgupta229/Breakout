@@ -70,7 +70,7 @@ public class BreakerGame extends Application {
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
         var splashScene = new Scene(vb, width, height, background);
-
+        currentLevel = 1;
         Label gameIntro = new Label("Welcome to Breakout! Click 'Start Game' and then press SPACE to start playing!");
         Label instructions = new Label("Use the mouse to control the paddle. The paddle will not move if the mouse is outside of the window.");
         Label cheatCodes  = new Label("Here are some cheat codes: SPACE - pause, R - reset ball and paddle, M - reset game, F - faster ball, S - slower ball");
@@ -123,7 +123,7 @@ public class BreakerGame extends Application {
         label1.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         finalScore.setFont(Font.font("Amble CN", FontWeight.BOLD, 15));
         Button startButton = new Button("Play Again");
-        startButton.setOnAction(e -> primaryStage.setScene(setupGame(WIDTH, HEIGHT, BACKGROUND)));
+        startButton.setOnAction(e -> primaryStage.setScene(setupSplashScreen(WIDTH, HEIGHT, BACKGROUND)));
 
         vb.getChildren().addAll(label1, finalScore, startButton);
 
@@ -286,14 +286,12 @@ public class BreakerGame extends Application {
         if (code == KeyCode.F) {
             if(myBall.getSpeed() != 0) {
                 myBall.changeSpeed(myBall.getSpeed() + 1);
-                secondBall.changeSpeed(myBall.getSpeed() + 1);
             }
         }
         //make ball go slower
         else if (code == KeyCode.S) {
             if (myBall.getSpeed() >= 1.0) {
                 myBall.changeSpeed(myBall.getSpeed() -1);
-                secondBall.changeSpeed(secondBall.getSpeed() - 1);
             }
         }
         //freeze/unfreeze the game
