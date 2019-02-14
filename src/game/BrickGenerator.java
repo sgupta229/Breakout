@@ -9,6 +9,13 @@ public class BrickGenerator extends BreakerGame{
     private List<Brick> myBricks;
     private int numBricks;
 
+    /**generates a list of all bricks according to a given config file, adds them to the game, and calculates the number of bricks
+     * necessary destroy to win (so All Bricks - Indestructible Bricks)
+     *
+     * @param root - the root node
+     * @param width - width of the scene
+     * @param lvlConfigFile - brick layout file for a particular level
+     */
     public void generateBricks(Group root, double width, String lvlConfigFile) {
         var brickList = new ArrayList<Brick>();
         var configList = readConfigFile(lvlConfigFile);
@@ -46,10 +53,17 @@ public class BrickGenerator extends BreakerGame{
         }
         myBricks = brickList;
     }
+
+    /**
+     * returns list of bricks generated in generateBricks()
+     */
     public List<Brick> getMyBricks() {
         return myBricks;
     }
 
+    /**
+     * @return number of bricks that need to be destroyed in order to win the level
+     */
     public int getNumBricks() {
         return numBricks;
     }

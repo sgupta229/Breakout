@@ -47,8 +47,9 @@ R - Reset ball and paddle
     When level = 2 - Tests SpeedBall powerup
     When level = 3 - Tests win condition
 
-Known Bugs: Some buggy behavior with Ball bouncing, especially re: indestructible bricks. 
-Occasionally the ball will reverse course when it should reflect off the brick normally
+Known Bugs: 
+*Some buggy behavior with Ball bouncing, especially re: indestructible bricks. Occasionally the ball will reverse course when it should reflect off the brick normally. This behavior will sometimes result in infinite loops (esp in level 3)
+*Ball will occasionally get stuck crawling along a wall. No fix except to let the ball die.
 
 Extra credit: We implemented the paddle tracking with the mouse
 

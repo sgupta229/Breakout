@@ -57,6 +57,10 @@ public class BreakerGame extends Application {
     private int currentLevel = 1;
     private int bricksLeft;
 
+    /** Standard start method
+     *
+     * @param stage
+     */
     @Override
     public void start (Stage stage) {
         primaryStage = stage;
@@ -504,7 +508,12 @@ public class BreakerGame extends Application {
         }
     }
 
-    public ArrayList<Integer> readConfigFile(String filename) {
+    /** Reads configuration files into List of Integers
+     *
+     * @param filename - file to read
+     * @return List<Integer>
+     */
+    public List<Integer> readConfigFile(String filename) {
         var input = new Scanner(this.getClass().getClassLoader().getResourceAsStream(filename));
         input.useDelimiter(" |\\n");
         ArrayList<Integer> results = new ArrayList<>();
@@ -514,6 +523,8 @@ public class BreakerGame extends Application {
         return results;
     }
 
+    /** perfunctory main method
+     */
     public static void main (String[] args) {
         launch(args);
     }
