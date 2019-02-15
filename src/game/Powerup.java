@@ -93,10 +93,11 @@ public abstract class Powerup extends Sprite {
 
     /**
      * Checks to see if a powerup's brick was hit. If it was, change the y-velocity to 50 so the powerup starts moving and
-     * set the ImageView visibility to true.
-     * @param myBricks
-     * @param myBall
-     * @param secondBall
+     * set the ImageView visibility to true. This is used in the BreakerGame class on all the powerups to determine
+     * what their speed should be.
+     * @param myBricks ArrayList of Bricks
+     * @param myBall The ball in the game
+     * @param secondBall The second ball in the game if the DoubleBall powerup is activated
      */
 
     public void checkBrickHit(List<Brick> myBricks, Ball myBall, Ball secondBall) {
@@ -111,10 +112,22 @@ public abstract class Powerup extends Sprite {
         }
     }
 
+    /**
+     * Increments the positsion of a powerup. This is used in the BreakerGame class to move the powerup.
+     * @param elapsedTime Increment the position based on how much time has elapsed.
+     */
+
     public void incrementPos(double elapsedTime) {
         this.setY(this.getY() + this.getY_vel() * elapsedTime);
     }
 
+    /**
+     *Checks to see if the paddle caught the powerup. If so, make the powerup invisible. All classes that extend powerup override this method,
+     * call super, then make the method more specific by adding what should happen if that specific powerup is caught.
+     * @param myPaddle The paddle in the game
+     * @param ball The main blue ball in the game
+     * @param secondBall The pinkish ball in the game if the DoubleBall powerup is activated.
+     */
 
     public void paddleCollision(Paddle myPaddle, Ball ball, Ball secondBall) {
         this.getMyImageView().setVisible(false);
