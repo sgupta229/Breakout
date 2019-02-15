@@ -58,6 +58,6 @@ Extra credit: We implemented the paddle tracking with the mouse
 Level 2 becomes more difficult with the introduction of multi-hit bricks and more spacing, which requires better aiming
 Level 3 becomes more difficult with the introduction of a layer of indestructible bricks, which makes the upper portion of bricks much trickier to hit
 
-
+Our three types of Bricks (besides the generic kind) are: Powerup Bricks, Indestructible Bricks, Multi-hit bricks
 ### Impressions
 Fun project, not too difficult with two people. Definitely requires some research on javafx on one's own, but the resources in the project description are very helpful
