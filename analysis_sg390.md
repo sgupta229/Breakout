@@ -261,8 +261,55 @@ functionality), to achieve the desired powerup effect. This was very easy for de
 powerups/adding new ones was easy. In conjunction with the PowerupGenerator, adding a new powerup and then generating it
 within levels is not difficult.
 
+* The Design Checklist:
+
+    * Communication
+        * I feel like we do not need to fix most of the subparts of communication. We were particular about naming
+        our methods, variables, and classes so that the user would have a good understanding of what they do. If not, the
+        user should be able to skim through the method and class and get an understanding of what it does. We tried to 
+        declare variables where necessary and name them so the user knows their purpose. We do not have any warnings
+        from the Java compiler as well.
+    * Modularity
+        * I feel that we do not need to fix much of the modularity of our code either. We only had private instance variables. 
+        We did not have any static methods or variables either. We made sure classes are responsible for all of their data.
+        The main class does not store any particular values for certain objects such as paddle position, powerup characterisitc, etc.
+        One thing we could've possibly made better is keeping track of bricks. This could've possibly been a characteristic of the Brick
+        class. Currently the main class keeps track of which bricks are still in the game. The same for powerups. This could possible
+        be abstracted and have separate classes that are keeping track of which bricks have been hit and which powerups have been taken rather
+        than having ArrayLists in the main class as global variables. Lastly, for the hierarchies I created, I ensured
+        that the superclass only had methods that were relevant to ALL subclasses. If I had a method that was only relevant
+        to some classes, I tried to make the method more general so it applied to all. 
+    * Flexibility
+        * I feel like this aspect of our design needs the most improvement. We do not have duplicate code, but all of our classes do not only 
+        have one purpose. The BreakerGame method handles a lot. In particular, the BreakerGame class handles all the testing cases, 
+        which makes it a lot longer and difficult to read through. Moreover, there were some more things we could have probably 
+        separated into their own classes, such as a class that sets up the splash screen, end scene, and levels. If we had more time, 
+        I'd definitely want to work on making the BreakerGame class smaller. This was a class that should've been discussed in a lot more detail,
+        because once we got too far in the game it became difficult to refactor. We tried separating out the testing methods and make
+        a tester class but we ran into too many bugs with not enough time.
+        
+* One feature that I implemented was the high score feature [HighScoreUpdater Commit](https://coursework.cs.duke.edu/compsci307_2019spring/game_team17/commit/58ebac17ff332c93174391a3b93d48e3542d1eaf)
+
+This commit represents changes I made to the main class and when I finished implementing the new class to keep track of high scores. Since this
+method is fairly short I implemented it in one commit. I made a few bug fixes in future commits. When designing this feature, I knew
+that I wanted to make it a separate class. I think the design is fine, as it functions independent of everything else and is easy to update 
+without touching other code. This code does not have any dependecies or assumptions. I simply instantiate this class in the BreakerGame
+class and call methods on the object in the setupGame and resetGame methods to update the highscore and then store the 
+high score. It is simple to add and remove this feature from the game. 
+
+
 ### Alternate Designs
 
-Here is another way to look at my design:
+One design decision that was made was to put the testing methods inside the main class. All of the testing functionality of
+this assignment is in the main class. Another design decision was to include the Sprite parent class. This Sprite parent
+class was an important decision made in the beginning because all objects that are ImageViews extend this class. An alternate design
+that was considered was to put the testing methods in their own class/classes. This is clearly preferred, as one of the main
+reason that the BreakerGame class is so long is because the testing methods are in the class. There aren't really any pros
+to having them in the BreakerGame class other than the fact that it is easier to implement. One problem we encountered
+when trying to make the tests into their own class was the need for a lot of the instance variables in the BreakerGame class.
+Other than making a lot of getter and setter methods, we weren't sure how to refactor the code. This is the main reason
+we left the methods in the main class. As for the Sprite class, I do not think there was a need for this class. The Ball, Paddle,
+Brick, and Powerup classes could've all just had ImageView properties. I do not think this parent class adds much utility to
+the code.
 
 ![This is cool, too bad you can't see it](crc-example.png "An alternate design")
