@@ -31,6 +31,7 @@ public class BreakerGame extends Application {
     private static final int WIDTH = 750;
     private static final int HEIGHT = 500;
     private static final int LIVES_AT_START = 3;
+    private static final int MAX_LEVEL = 3;
     private Timeline animation;
 
     private Ball myBall;
@@ -213,7 +214,7 @@ public class BreakerGame extends Application {
         }
         //check for win
         if (bricksLeft == 0){
-            if (currentLevel == 3)
+            if (currentLevel == MAX_LEVEL)
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             else {
                 animation.stop();
