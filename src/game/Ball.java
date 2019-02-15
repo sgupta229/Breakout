@@ -1,6 +1,16 @@
 package game;
 
+/**
+ * <h1>Ball Class</h1>
+ *<p>The purpose of this class is to manage all the properties of the ball. This includes the movement of the ball
+ * and collision with other objects.</p>
+ */
+
 public class Ball extends Sprite {
+
+    /**
+     *
+     */
     private double x_dir;
     private double y_dir;
     private double ball_speed;
