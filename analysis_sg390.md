@@ -311,5 +311,3 @@ Other than making a lot of getter and setter methods, we weren't sure how to ref
 we left the methods in the main class. As for the Sprite class, I do not think there was a need for this class. The Ball, Paddle,
 Brick, and Powerup classes could've all just had ImageView properties. I do not think this parent class adds much utility to
 the code.
-
-![This is cool, too bad you can't see it](crc-example.png "An alternate design")
