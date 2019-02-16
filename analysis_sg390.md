@@ -153,7 +153,7 @@ folder (follow the convention in the other level configuration files).
 
 ```java
 if (bricksLeft == 0){
-            if (currentLevel == 3)
+            if (currentLevel == MAX_LEVEL)
                 primaryStage.setScene(setupResetScreen(WIDTH, HEIGHT, BACKGROUND));
             else {
                 animation.stop();
@@ -163,8 +163,8 @@ if (bricksLeft == 0){
         }
 ```
 
-This if statement is in the step method. Change currentLevel == 3 to currentLevel == 4. Then the game will go to level
-4 and then quit.
+This if statement is in the step method. As you can see, the game keeps going if MAX_LEVEL has not been reached yet.
+The user can change the MAX_LEVEL instance variable in the game to change the number of levels now.
 
 * I am fairly happy with the design of this program. I feel like we made almost as many classes as we should have. Each class
 is responsible for a certain type of object or feature. The thought process we had was whatever can be made into a separate
