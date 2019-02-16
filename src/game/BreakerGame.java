@@ -71,6 +71,14 @@ public class BreakerGame extends Application {
         primaryStage.show();
     }
 
+    /**
+     * This method is responsible for setting up the splash screen.
+     * @param width The width of the splash screen
+     * @param height The height of the splash screen
+     * @param background The background color of the splash screen
+     * @return the splash screen scene
+     */
+
     private Scene setupSplashScreen (int width, int height, Paint background) {
         VBox vb = new VBox(20);
         vb.setAlignment(Pos.CENTER);
@@ -90,6 +98,15 @@ public class BreakerGame extends Application {
         vb.getChildren().addAll(gameIntro, instructions, cheatCodes, startButton);
         return splashScene;
     }
+
+    /**
+     * Similar to the setupSplashScreen method, this method sets up the reset screen. This method sets the screen up for the game
+     * if the player wins or loses.
+     * @param width the width of the screen
+     * @param height the height of the screen
+     * @param background the color of the screen
+     * @return The reset screen scene.
+     */
 
     //We should try to combine this and Splash screen somehow
     private Scene setupResetScreen(int width, int height, Paint background) {
@@ -134,6 +151,16 @@ public class BreakerGame extends Application {
 
         return scene;
     }
+
+    /**
+     * A critical method for the whole program. This method sets up each level of the game. It starts the animation and adds all
+     * appropriate ImageViews to the scene including the ball, paddle, bricks, and powerups. This method also updates the high score to
+     * be displayed during this game.
+     * @param width The width of the screen
+     * @param height the height of the screen
+     * @param background the background color of the screen
+     * @return the scene of the current level.
+     */
 
     private Scene setupGame (int width, int height, Paint background) {
 
@@ -187,6 +214,13 @@ public class BreakerGame extends Application {
         return scene;
     }
 
+    /**
+     * This method is responsible for everything that should be checked at a step by step increment. This updates which bricks have been
+     * hit, which powerups have been released/caught, and the movement of the ball. This method is also responsible for updating the level
+     * text, score text, and high score text of the game. We also keep track of how many lives are left in this method.
+     * @param elapsedTime the time increments of the game
+     */
+
     private void step(double elapsedTime) {
         if (isTest){
             numSteps++;
@@ -225,6 +259,10 @@ public class BreakerGame extends Application {
         checkAndHandleCollisions();
     }
 
+    /**
+     * This method is responsible for the handling the movement of the paddle using the mouse.
+     */
+
     private void mouseHandle(){
         if(myBall.getSpeed() == 0) {
             myPaddle.setPosition(WIDTH / 2 - myPaddle.getWidth() / 2, HEIGHT - 25 - myPaddle.getHeight() / 2);
@@ -240,11 +278,23 @@ public class BreakerGame extends Application {
         }
     }
 
+    /**
+     * This method is called by the step method. This method is responsible for updating the sprites such as the ball location and the
+     * second ball location. This method also keeps track of how many lives have been lost.
+     * @param elapsedTime
+     */
+
     private void updateSprites(double elapsedTime) {
         lostALife = myBall.checkMissedBall(myPaddle);
         myBall.incrementPos(elapsedTime, myPaddle);
         secondBall.incrementPos(elapsedTime, myPaddle);
     }
+
+    /**
+     * This method is also called by the step method. This method checks for collisions between the both balls and each brick
+     * to determine whether or not that bricks needs to be removed. The method also handles the collisions between the the paddle and the balls
+     * and the paddle and the powerups.
+     */
 
     private void checkAndHandleCollisions() {
         var toRemove = new ArrayList();
@@ -276,6 +326,11 @@ public class BreakerGame extends Application {
         }
     }
 
+    /**
+     * This is a small utility function that instantiates a TextManager object and sets up the text in the game.
+     * @param root the root to which the Text should be added to.
+     */
+
     private void setUpText(Group root) {
         lifeCount = new Text("Lives: " + livesLeft);
         TextManager textManager = new TextManager();
@@ -284,6 +339,13 @@ public class BreakerGame extends Application {
         textManager.setText(this.scoreText, 677, 15, Color.BLUEVIOLET, root);
         textManager.setText(this.highScoreText, 643, 30, Color.DARKSALMON, root);
     }
+
+    /**
+     * This method handles all the key input from the user. The user can press a variety of keyboard keys to get the game to do something
+     * F and S can change the speed of the ball. Space pauses the game. L adds a life. R resets the ball and paddle location.
+     * M restarts the game. , . and / each set up a different text depending on the level. Digits 1, 2, 3 allow the user to directly jump to
+     * those levels.
+     */
 
     private void handleKeyInput (KeyCode code) {
 
@@ -370,10 +432,23 @@ public class BreakerGame extends Application {
         }
     }
 
+    /**
+     * A small utility method for tests. This removes all the unecessary bricks.
+     */
+
     private void setupForTestScene() {
         myBricks.clear();
         bricksLeft = 2;
     }
+
+    /**
+     * This method is responsible for setting up a test.s
+     * @param width The width of the test screen
+     * @param height the height of a test screen
+     * @param background the background color of a test screen
+     * @param testFile the test configuration file
+     * @return returns the scene of the test.
+     */
 
     private Scene setupForTest(int width, int height, Paint background, String testFile){
         livesLeft = LIVES_AT_START;
@@ -444,12 +519,22 @@ public class BreakerGame extends Application {
         return scene;
     }
 
+    /**
+     * This method initializes the second ball. This ball is not visible nor a part of the game until the DoubleBall powerup is
+     * activated.
+     */
+
     private void initSecondBall() {
         secondBall = new Ball("ballTwo.gif", WIDTH, HEIGHT);
         secondBall.setPosition(1000, 1000);
         secondBall.getMyImageView().setVisible(false);
         myBallArray = new Ball[] {myBall, secondBall};
     }
+
+    /**
+     * This method is responsible for checking to see if a test passed or failed.
+     * @param testType Tells the method which test is being tested for.
+     */
 
     //check for win is in SetupResetScreen()
     private void checkTest(String testType) {
