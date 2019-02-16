@@ -9,7 +9,7 @@ CompSci 307: Game Project Analysis
 
 The design goals of our projects was to make classes easy to read and understand by the user. We wanted
 to separate as many things as possible so that each class had one specific purpose rather than being a 
-general class that does a lot of things.
+general class that does a lot of things. This is why we have a lot of classes a few abstract hierarchical structures.
 
 **How to add new features**
 
@@ -34,6 +34,7 @@ in the resource folder. Once the level configuration file has been made, the use
 instance variable to however many levels there are now.
 
 **Major design choices**
+
 
 **Assumptions/Decisions made**
 
