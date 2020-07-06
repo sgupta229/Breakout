@@ -1,4 +1,4 @@
-game
+Brick Breaker Game
 ====
 
 ### Download Demo Video
